@@ -1,0 +1,11 @@
+# Cancels unpaid orders and puts their stock back. Free replacement for a hosting cron.
+# Needs two repository secrets: SITE_URL (https://yourdomain.com, no trailing slash) and CRON_SECRET.
+name: Store cron
+on:
+  schedule: [{ cron: "0 */3 * * *" }]
+  workflow_dispatch:
+jobs:
+  expire-orders:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "${{ secrets.SITE_URL }}/api/cron/expire-orders"

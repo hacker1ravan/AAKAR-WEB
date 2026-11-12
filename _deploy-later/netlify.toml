@@ -1,0 +1,6 @@
+[build]
+  command = "npm run deploy-build"
+
+[build.environment]
+  # public values are meant to appear in the browser bundle
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_RAZORPAY_KEY_ID,NEXTAUTH_URL"

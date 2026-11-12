@@ -1,0 +1,296 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("customer") // customer, admin, guest (checked out without an account) or deleted
+  emailVerified DateTime?
+  sessionVersion Int      @default(0)   // raising this logs the user out everywhere
+  totpSecret     String?               // two-factor secret, stored encrypted
+  totpEnabled    Boolean  @default(false)
+  totpLastStep   Int      @default(0)  // stops a code from being used twice
+  recoveryCodes  String[] @default([]) // hashed one-time backup codes
+  createdAt DateTime @default(now())
+  orders    Order[]
+  addresses Address[]
+}
+
+model Product {
+  id           String    @id @default(cuid())
+  name         String
+  description  String
+  price        Int
+  comparePrice Int       @default(0)
+  category     String
+  images       String[]
+  codAvailable Boolean   @default(true)
+  active       Boolean   @default(true)
+  gstRate      Int       @default(5)
+  hsnCode      String    @default("")
+  createdAt    DateTime  @default(now())
+  variants     Variant[]
+  reviews      Review[]
+  @@index([active, createdAt])
+  @@index([category])
+}
+
+model Variant {
+  id        String  @id @default(cuid())
+  size      String
+  color     String
+  stock     Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  @@index([productId])
+}
+
+model Category {
+  id           String  @id @default(cuid())
+  name         String  @unique
+  imageUrl     String  @default("")
+  position     Int     @default(0)
+  active       Boolean @default(true)
+  codAvailable Boolean @default(true)
+  sizeChart    String  @default("")
+}
+
+model Order {
+  id                String          @id @default(cuid())
+  user              User            @relation(fields: [userId], references: [id])
+  userId            String
+  accessToken       String          @unique // lets guests open their order and invoice from the email link
+  invoiceNo         Int             @unique @default(autoincrement())
+  status            String          @default("pending")
+  paymentMethod     String          @default("online")
+  subtotal          Int             @default(0)
+  shipping          Int             @default(0)
+  discount          Int             @default(0)
+  codFee            Int             @default(0)
+  couponCode        String          @default("")
+  total             Int
+  razorpayOrderId   String?         @unique
+  razorpayPaymentId String?
+  shippingName      String          @default("")
+  shippingPhone     String          @default("")
+  shippingPincode   String          @default("")
+  shippingState     String          @default("") // GST state code, for CGST/SGST or IGST
+  shippingAddress   String          @default("")
+  courier           String          @default("")
+  trackingNumber    String          @default("")
+  trackingUrl       String          @default("")
+  createdAt         DateTime        @default(now())
+  deliveredAt       DateTime?
+  items             OrderItem[]
+  events            OrderEvent[]
+  returns           ReturnRequest[]
+  @@index([userId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  order     Order  @relation(fields: [orderId], references: [id])
+  orderId   String
+  variantId String
+  productId String @default("")
+  quantity  Int
+  price     Int
+  name      String @default("")
+  size      String @default("")
+  color     String @default("")
+  image     String @default("")
+  gstRate   Int    @default(0)
+  hsnCode   String @default("")
+  @@index([orderId])
+  @@index([productId])
+}
+
+model OrderEvent {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  status    String
+  note      String   @default("")
+  createdAt DateTime @default(now())
+  @@index([orderId])
+}
+
+model ReturnRequest {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  reason    String
+  details   String   @default("")
+  status    String   @default("requested")
+  adminNote String   @default("")
+  createdAt DateTime @default(now())
+  @@index([orderId])
+  @@index([status])
+}
+
+model Coupon {
+  id           String    @id @default(cuid())
+  code         String    @unique
+  type         String
+  value        Int
+  minOrder     Int       @default(0)
+  maxDiscount  Int       @default(0)
+  usageLimit   Int       @default(0)
+  perUserLimit Int       @default(1)
+  usedCount    Int       @default(0)
+  expiresAt    DateTime?
+  active       Boolean   @default(true)
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+  @@index([resetAt])
+}
+
+model Page {
+  id      String @id @default(cuid())
+  slug    String @unique
+  title   String
+  content String
+}
+
+model Banner {
+  id         String    @id @default(cuid())
+  imageUrl   String
+  title      String    @default("")
+  subtitle   String    @default("")
+  buttonText String    @default("")
+  linkUrl    String    @default("")
+  position   Int       @default(0)
+  active     Boolean   @default(true)
+  startsAt   DateTime?
+  endsAt     DateTime?
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  userId    String
+  userName  String
+  rating    Int
+  comment   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+  @@index([productId, status])
+}
+
+model SiteSettings {
+  id                 String   @id @default("main")
+  siteName           String   @default("My Clothing Store")
+  tagline            String   @default("")
+  logoUrl            String   @default("")
+  faviconUrl         String   @default("")
+  primaryColor       String   @default("#000000")
+  secondaryColor     String   @default("#ffffff")
+  accentColor        String   @default("#e11d48")
+  metaTitle          String   @default("")
+  metaDescription    String   @default("")
+  metaKeywords       String   @default("")
+  ogImageUrl         String   @default("")
+  siteUrl            String   @default("http://localhost:3000")
+  allowIndexing      Boolean  @default(true)
+  googleAnalyticsId  String   @default("")
+  searchConsoleCode  String   @default("")
+  contactEmail       String   @default("")
+  contactPhone       String   @default("")
+  address            String   @default("")
+  instagramUrl       String   @default("")
+  facebookUrl        String   @default("")
+  announcement       String   @default("")
+  maintenanceMode    Boolean  @default(false)
+  maintenanceMessage String   @default("We are updating our store. Back soon!")
+  returnWindowDays   Int      @default(7)
+  returnPolicy       String   @default("Unused items with tags can be returned within the return window after delivery. Refunds go to your original payment method after we receive and check the item.")
+  shippingFlatRate   Int      @default(5000)
+  freeShippingAbove  Int      @default(99900)
+  lowStockThreshold  Int      @default(5)
+  codEnabled         Boolean  @default(false)
+  codFee             Int      @default(0)
+  codMaxOrder        Int      @default(0)
+  deliveryPincodes   String   @default("")
+  codPincodes        String   @default("")
+  gstin              String   @default("")
+  invoicePrefix      String   @default("INV-")
+  gstOnShipping      Int      @default(18)
+  whatsappNumber     String   @default("")
+  couriers           String   @default("Delhivery\nDTDC\nBlue Dart\nIndia Post\nShiprocket\nXpressbees\nEcom Express")
+  updatedAt          DateTime @updatedAt
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  label     String   @default("")
+  name      String
+  phone     String
+  pincode   String
+  state     String
+  address   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model EmailVerification {
+  id              String   @id @default(cuid())
+  userId          String
+  tokenHash       String   @unique
+  pendingName     String?  // set when a guest later registers: applied only after the email is verified
+  pendingPassword String?
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String   @default("")
+  userEmail String   @default("")
+  action    String
+  target    String   @default("")
+  details   String   @default("")
+  ip        String   @default("")
+  @@index([createdAt])
+  @@index([userId])
+}
