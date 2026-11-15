@@ -41,23 +41,33 @@ export const PUT = adminRoute(async (_, { params, body }) => {
     );
   }
 
-  if (body.status === "refunded") {
-    // Cash on Delivery orders have no Razorpay payment: the admin sends that refund manually.
-    if (r.order.paymentMethod !== "cod") {
-      if (!r.order.razorpayPaymentId) return fail("No payment found for this order");
-      try {
-        await razorpay().payments.refund(r.order.razorpayPaymentId, { amount: r.order.total });
-      } catch (e) {
-        console.error(e);
-        return fail("Razorpay refund failed", 502);
-      }
+  const online = body.status === "refunded" && r.order.paymentMethod !== "cod";
+  if (online && !r.order.razorpayPaymentId) return fail("No payment found for this order");
+
+  // Atomically claim this transition. If two requests arrive together (double click, two tabs),
+  // only one moves the return out of its current status; the other gets count 0 and stops here.
+  // Without this guard both could pass the check above and refund the customer twice.
+  const claim = await prisma.returnRequest.updateMany({
+    where: { id: r.id, status: r.status },
+    data: { status: body.status, adminNote: body.adminNote },
+  });
+  if (claim.count === 0) return fail("This return was just updated. Please refresh and try again.", 409);
+
+  if (online) {
+    try {
+      await razorpay().payments.refund(r.order.razorpayPaymentId!, { amount: r.order.total });
+    } catch (e) {
+      console.error(e);
+      // The refund did not go through, so undo the status change we just claimed.
+      await prisma.returnRequest.updateMany({
+        where: { id: r.id, status: "refunded" },
+        data: { status: r.status, adminNote: r.adminNote },
+      });
+      return fail("Razorpay refund failed", 502);
     }
   }
 
-  const updated = await prisma.returnRequest.update({
-    where: { id: r.id },
-    data: { status: body.status, adminNote: body.adminNote },
-  });
+  const updated = await prisma.returnRequest.findUnique({ where: { id: r.id } });
 
   const s = await getSettings();
   const lines = [
