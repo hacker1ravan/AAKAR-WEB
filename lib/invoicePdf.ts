@@ -101,6 +101,8 @@ export function invoicePdf(d: InvoiceData): Promise<Buffer> {
     };
     total("Items subtotal", money(order.subtotal));
     if (order.discount > 0) total(`Discount (${order.couponCode})`, "-" + money(order.discount));
+    if (order.shipping > 0) total("Shipping", money(order.shipping));
+    if (order.codFee > 0) total("Cash on Delivery fee", money(order.codFee));
     if (gst)
       for (const [rate, v] of inv.summary) {
         if (intra) {

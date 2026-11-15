@@ -100,6 +100,12 @@ export default async function Invoice({
         {order.discount > 0 && (
           <p className="flex justify-between"><span>Discount ({order.couponCode})</span><span>-{inr(order.discount)}</span></p>
         )}
+        {order.shipping > 0 && (
+          <p className="flex justify-between"><span>Shipping</span><span>{inr(order.shipping)}</span></p>
+        )}
+        {order.codFee > 0 && (
+          <p className="flex justify-between"><span>Cash on Delivery fee</span><span>{inr(order.codFee)}</span></p>
+        )}
         {gst && inv.summary.map(([rate, v]) =>
           intra ? (
             <div key={rate} className="text-xs space-y-1">
