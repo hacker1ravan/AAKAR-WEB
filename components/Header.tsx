@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import HeaderActions from "./HeaderActions";
+import MobileMenu from "./MobileMenu";
 import { cld } from "@/lib/img";
 
 export default async function Header() {
@@ -19,10 +20,11 @@ export default async function Header() {
             s.siteName
           )}
         </Link>
-        <nav className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm [&>*]:whitespace-nowrap">
+        <nav className="hidden flex-wrap items-center gap-x-5 gap-y-1 text-sm md:flex [&>*]:whitespace-nowrap">
           <Link href="/products" className="link-underline">Shop</Link>
           <HeaderActions />
         </nav>
+        <MobileMenu />
       </div>
       {cats.length > 0 && (
         <div className="border-t border-[var(--line)]">
