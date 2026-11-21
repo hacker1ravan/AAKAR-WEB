@@ -16,7 +16,7 @@ function QuickPrice({ p, onSaved }: { p: any; onSaved: () => void }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const changed = rs(price) !== p.price || (mrp ? rs(mrp) : 0) !== p.comparePrice;
-  const box = "border p-1 rounded w-20 text-xs";
+  const box = "input w-20 text-xs";
 
   return (
     <div className="space-y-1">
@@ -24,7 +24,7 @@ function QuickPrice({ p, onSaved }: { p: any; onSaved: () => void }) {
         <input type="number" className={box} value={price} onChange={(e) => setPrice(e.target.value)} title="Selling price" aria-label="Selling price" />
         <input type="number" className={box} placeholder="MRP" value={mrp} onChange={(e) => setMrp(e.target.value)} title="MRP (optional)" aria-label="MRP" />
         {changed && (
-          <button className="underline text-xs" disabled={busy}
+          <button className="btn btn-dark btn-sm" disabled={busy}
             onClick={async () => {
               setBusy(true); setErr("");
               try {
@@ -70,15 +70,15 @@ export default function AdminProducts() {
   );
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Products ({shown.length})</h1>
-        <Link href="/admin/products/new" className="bg-black text-white px-3 py-2 rounded text-sm">+ Add product</Link>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Products ({shown.length})</h1>
+        <Link href="/admin/products/new" className="btn btn-dark btn-sm">+ Add product</Link>
       </div>
 
       <div className="flex gap-2 flex-wrap text-sm">
-        <input className="border p-2 rounded" placeholder="Search name" aria-label="Search name" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className="border p-2 rounded" aria-label="Category" value={cat} onChange={(e) => setCat(e.target.value)}>
+        <input className="input max-w-48" placeholder="Search name" aria-label="Search name" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select className="input max-w-48" aria-label="Category" value={cat} onChange={(e) => setCat(e.target.value)}>
           <option value="">All categories</option>
           {cats.map((c) => <option key={c.id}>{c.name}</option>)}
         </select>
@@ -100,16 +100,16 @@ export default function AdminProducts() {
         ]}
         actions={(p) => (
           <>
-            <Link href={`/admin/products/${p.id}`} className="underline">Edit</Link>
-            <button className="underline" onClick={() => patch(p, { active: !p.active }, p.active ? "Hidden from store" : "Now visible")}>
+            <Link href={`/admin/products/${p.id}`} className="btn btn-link btn-sm">Edit</Link>
+            <button className="btn btn-link btn-sm" onClick={() => patch(p, { active: !p.active }, p.active ? "Hidden from store" : "Now visible")}>
               {p.active ? "Hide" : "Show"}
             </button>
-            <button className="underline" onClick={() =>
+            <button className="btn btn-link btn-sm" onClick={() =>
               run(async () => {
                 const r = await api(`/api/admin/products/${p.id}/duplicate`, "POST");
                 router.push(`/admin/products/${r.id}`);
               }, "")}>Duplicate</button>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-danger btn-sm" onClick={() => {
               if (confirm(`Delete "${p.name}"? Hiding it is safer.`))
                 run(async () => { await api(`/api/products/${p.id}`, "DELETE"); await load(); }, "Deleted");
             }}>Delete</button>

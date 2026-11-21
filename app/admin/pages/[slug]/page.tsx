@@ -25,12 +25,12 @@ export default function EditPage() {
       className="max-w-2xl mx-auto p-4 space-y-4"
       onSubmit={(e) => { e.preventDefault(); run(() => api(`/api/admin/pages/${slug}`, "PUT", v)); }}
     >
-      <h1 className="text-2xl font-bold">Edit page</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Edit page</h1>
       <TextField label="Title" required {...field("title")} />
       <TextField label="Content" rows={20} {...field("content")} />
       {msg && <p className="text-sm">{msg}</p>}
       <SubmitButton loading={loading}>Save page</SubmitButton>
-      <Link href={`/${slug}`} className="underline text-sm" target="_blank">View page</Link>
+      <Link href={`/${slug}`} className="btn btn-link btn-sm" target="_blank">View page</Link>
     </form>
   );
 }

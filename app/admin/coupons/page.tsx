@@ -49,12 +49,12 @@ export default function AdminCoupons() {
 
   return (
     <div className="p-4 space-y-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold">Coupons</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Coupons</h1>
       <form onSubmit={submit} className="space-y-3">
         <Section title={editId ? "Edit coupon" : "Create coupon"}>
           <TextField label="Code (e.g. WELCOME10)" required {...field("code")} />
           <label className="block text-sm">Type
-            <select className="w-full border p-2 rounded mt-1" value={v.type}
+            <select className="input mt-1" value={v.type}
               onChange={(e) => setValues((p) => ({ ...p, type: e.target.value }))}>
               <option value="percent">Percentage off</option>
               <option value="fixed">Fixed amount off</option>
@@ -70,7 +70,7 @@ export default function AdminCoupons() {
         </Section>
         {msg && <p className="text-sm">{msg}</p>}
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Create coupon"}</SubmitButton>
-        {editId && <button type="button" className="underline text-sm" onClick={reset}>Cancel edit</button>}
+        {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>
 
       <DataTable
@@ -85,7 +85,7 @@ export default function AdminCoupons() {
         ]}
         actions={(c) => (
           <>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-link btn-sm" onClick={() => {
               setEditId(c.id);
               setValues({
                 code: c.code, type: c.type,
@@ -97,7 +97,7 @@ export default function AdminCoupons() {
               });
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}>Edit</button>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-danger btn-sm" onClick={() => {
               if (confirm(`Delete coupon ${c.code}?`))
                 run(async () => { await api(`/api/admin/coupons/${c.id}`, "DELETE"); await load(); }, "Deleted");
             }}>Delete</button>

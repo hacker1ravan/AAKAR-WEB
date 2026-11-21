@@ -18,7 +18,7 @@ export default async function InfoPage({ params }: P) {
 
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{page.title}</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">{page.title}</h1>
       <p className="whitespace-pre-line text-sm leading-6">{page.content}</p>
       {slug === "contact" && (
         <>

@@ -78,11 +78,10 @@ export default async function Sales({ searchParams }: { searchParams: Promise<{ 
   return (
     <div className="p-4 space-y-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-2xl font-bold">Sales</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Sales</h1>
         <div className="flex gap-2 text-sm">
           {[7, 30, 90].map((d) => (
-            <Link key={d} href={`/admin/sales?days=${d}`}
-              className={`border rounded-full px-3 py-1 ${d === days ? "bg-black text-white" : ""}`}>
+            <Link key={d} href={`/admin/sales?days=${d}`} className="chip" data-active={d === days}>
               {d} days
             </Link>
           ))}
@@ -91,9 +90,9 @@ export default async function Sales({ searchParams }: { searchParams: Promise<{ 
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {cards.map(([title, v]) => (
-          <div key={title} className="border rounded-lg p-3">
-            <p className="text-xs">{title}</p>
-            <p className="text-xl font-bold">{v}</p>
+          <div key={title} className="stat-card">
+            <p className="stat-label">{title}</p>
+            <p className="stat-value">{v}</p>
           </div>
         ))}
       </div>

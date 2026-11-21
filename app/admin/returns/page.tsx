@@ -26,10 +26,10 @@ export default function AdminReturns() {
     }, `Marked ${status}`);
   };
 
-  const btn = "underline mr-2";
+  const btn = "btn btn-link btn-sm";
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Returns</h1>
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Returns</h1>
       {msg && <p className="text-sm">{msg}</p>}
       <DataTable
         rows={rows}

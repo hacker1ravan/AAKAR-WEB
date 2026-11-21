@@ -44,8 +44,8 @@ export default function ConsentAnalytics({ gaId }: { gaId: string }) {
               <Link href="/privacy-policy" className="underline">Privacy policy</Link>
             </p>
             <div className="flex gap-2">
-              <button className="border rounded px-4 py-2" onClick={() => save("declined")}>Decline</button>
-              <button className="bg-black text-white rounded px-4 py-2" onClick={() => save("accepted")}>Accept</button>
+              <button className="btn btn-outline" onClick={() => save("declined")}>Decline</button>
+              <button className="btn btn-dark" onClick={() => save("accepted")}>Accept</button>
             </div>
           </div>
         </div>

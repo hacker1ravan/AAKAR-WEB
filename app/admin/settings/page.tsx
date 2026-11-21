@@ -40,7 +40,7 @@ export default function SettingsPage() {
 
   return (
     <form onSubmit={save} className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Store Settings</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Store Settings</h1>
 
       <Section title="General">
         <TextField label="Website name" required {...field("siteName")} />

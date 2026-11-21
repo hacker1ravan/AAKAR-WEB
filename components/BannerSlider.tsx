@@ -22,7 +22,8 @@ export default function BannerSlider({ banners }: { banners: B[] }) {
     return () => clearInterval(t);
   }, [n, paused]);
 
-  const arrow = "absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/80 text-lg";
+  const arrow =
+    "absolute top-1/2 -translate-y-1/2 z-10 grid place-items-center w-10 h-10 rounded-full bg-[var(--surface)]/85 text-xl text-[var(--ink)] shadow-[var(--shadow-sm)] backdrop-blur transition hover:bg-[var(--surface)]";
 
   return (
     <section
@@ -31,7 +32,7 @@ export default function BannerSlider({ banners }: { banners: B[] }) {
       onMouseLeave={() => setPaused(false)}
       onTouchStart={() => setPaused(true)}
     >
-      <div className="relative aspect-[16/9] md:aspect-[16/5] bg-gray-100">
+      <div className="relative aspect-[16/9] md:aspect-[16/5] bg-[var(--surface-2)]">
         {banners.map((b, idx) => (
           <div
             key={b.id}
@@ -41,11 +42,15 @@ export default function BannerSlider({ banners }: { banners: B[] }) {
             <Wrap href={b.linkUrl} className="block w-full h-full relative">
               <img src={cld(b.imageUrl, 1600)} srcSet={cldSet(b.imageUrl, [800, 1600, 2400])} sizes="100vw" alt={b.title} loading={idx === 0 ? "eager" : "lazy"} className="w-full h-full object-cover" />
               {(b.title || b.subtitle || b.buttonText) && (
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end items-start gap-2 p-4 md:p-10 text-white">
-                  {b.title && <h2 className="text-2xl md:text-4xl font-bold">{b.title}</h2>}
-                  {b.subtitle && <p className="text-sm md:text-lg">{b.subtitle}</p>}
+                <div className="absolute inset-0 flex flex-col items-start justify-end gap-3 bg-gradient-to-t from-black/65 via-black/15 to-transparent p-5 md:p-12 text-white">
+                  {b.title && (
+                    <h2 className="max-w-2xl font-serif text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
+                      {b.title}
+                    </h2>
+                  )}
+                  {b.subtitle && <p className="max-w-xl text-sm text-white/90 md:text-lg">{b.subtitle}</p>}
                   {b.buttonText && b.linkUrl && (
-                    <span className="mt-1 px-5 py-2 rounded bg-[var(--accent)] text-white text-sm">{b.buttonText}</span>
+                    <span className="btn btn-primary btn-lg mt-1">{b.buttonText}</span>
                   )}
                 </div>
               )}
@@ -58,10 +63,10 @@ export default function BannerSlider({ banners }: { banners: B[] }) {
         <>
           <button type="button" aria-label="Previous banner" className={`${arrow} left-2`} onClick={() => setI((i - 1 + n) % n)}>‹</button>
           <button type="button" aria-label="Next banner" className={`${arrow} right-2`} onClick={() => setI((i + 1) % n)}>›</button>
-          <div className="absolute bottom-2 inset-x-0 z-10 flex justify-center gap-2">
+          <div className="absolute bottom-3 inset-x-0 z-10 flex justify-center gap-2">
             {banners.map((b, idx) => (
               <button key={b.id} type="button" aria-label={`Banner ${idx + 1}`} onClick={() => setI(idx)}
-                className={`w-2 h-2 rounded-full ${idx === i ? "bg-white" : "bg-white/50"}`} />
+                className={`h-1.5 rounded-full transition-all duration-300 ${idx === i ? "w-6 bg-white" : "w-1.5 bg-white/55 hover:bg-white/80"}`} />
             ))}
           </div>
         </>

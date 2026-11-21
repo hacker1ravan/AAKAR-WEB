@@ -1,7 +1,7 @@
 "use client";
 export default function PrintButton() {
   return (
-    <button onClick={() => window.print()} className="print:hidden border rounded px-4 py-2">
+    <button onClick={() => window.print()} className="btn btn-outline print:hidden">
       Print / Save as PDF
     </button>
   );

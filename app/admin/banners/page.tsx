@@ -52,8 +52,8 @@ export default function AdminBanners() {
   };
 
   return (
-    <div className="p-4 space-y-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold">Home page banners</h1>
+    <div className="p-4 md:p-6 space-y-6 max-w-3xl mx-auto">
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Home page banners</h1>
       <form onSubmit={submit} className="space-y-3">
         <Section title={editId ? "Edit banner" : "Add banner"}>
           <ImageField label="Banner image (wide, about 1600 x 600, keep the important part in the centre)" {...field("imageUrl")} />
@@ -68,7 +68,7 @@ export default function AdminBanners() {
         </Section>
         {msg && <p className="text-sm">{msg}</p>}
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Add banner"}</SubmitButton>
-        {editId && <button type="button" className="underline text-sm" onClick={reset}>Cancel edit</button>}
+        {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>
 
       <DataTable
@@ -82,7 +82,7 @@ export default function AdminBanners() {
         ]}
         actions={(b) => (
           <>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-link btn-sm" onClick={() => {
               setEditId(b.id);
               setValues({
                 imageUrl: b.imageUrl, title: b.title, subtitle: b.subtitle, buttonText: b.buttonText,
@@ -91,7 +91,7 @@ export default function AdminBanners() {
               });
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}>Edit</button>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-danger btn-sm" onClick={() => {
               if (confirm("Delete this banner?"))
                 run(async () => { await api(`/api/admin/banners/${b.id}`, "DELETE"); await load(); }, "Deleted");
             }}>Delete</button>

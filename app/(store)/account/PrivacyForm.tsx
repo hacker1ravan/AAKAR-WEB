@@ -13,7 +13,7 @@ export default function PrivacyForm() {
       <p className="text-sm">
         Download a copy of everything we hold about you: your details, addresses, orders, reviews and wishlist.
       </p>
-      <a href="/api/account/export" className="inline-block border rounded px-4 py-2 text-sm">Download my data</a>
+      <a href="/api/account/export" className="btn btn-outline btn-sm">Download my data</a>
 
       <form
         className="space-y-3 border-t pt-3"
@@ -35,7 +35,7 @@ export default function PrivacyForm() {
         <TextField label="Your password" type="password" required {...field("password")} />
         <TextField label="Type DELETE to confirm" required {...field("confirm")} />
         {msg && <p className="text-sm text-red-600">{msg}</p>}
-        <button disabled={loading || values.confirm !== "DELETE"} className="border border-red-600 text-red-600 rounded px-4 py-2 text-sm disabled:opacity-40">
+        <button disabled={loading || values.confirm !== "DELETE"} className="btn btn-danger btn-sm">
           {loading ? "Please wait..." : "Delete my account"}
         </button>
       </form>

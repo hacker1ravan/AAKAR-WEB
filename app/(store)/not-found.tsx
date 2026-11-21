@@ -7,8 +7,8 @@ export default function StoreNotFound() {
       <h1 className="text-3xl font-bold">We could not find that page</h1>
       <p>The link may be old, or the product may no longer be available.</p>
       <div className="flex gap-3 justify-center">
-        <Link href="/products" className="bg-[var(--primary)] text-[var(--secondary)] rounded px-5 py-2">Browse the shop</Link>
-        <Link href="/" className="border rounded px-5 py-2">Home</Link>
+        <Link href="/products" className="btn btn-dark">Browse the shop</Link>
+        <Link href="/" className="btn btn-outline">Home</Link>
       </div>
     </main>
   );

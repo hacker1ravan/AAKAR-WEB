@@ -7,16 +7,16 @@ export default function SizeChart({ text }: { text: string }) {
   const [head, ...body] = rows;
 
   return (
-    <details className="border rounded p-3 text-sm">
-      <summary className="cursor-pointer font-medium">Size chart</summary>
-      <div className="overflow-x-auto mt-2">
-        <table className="w-full text-left border">
-          <thead className="bg-gray-100">
-            <tr>{head.map((h, i) => <th key={i} className="p-2">{h}</th>)}</tr>
+    <details className="surface p-3 text-sm">
+      <summary className="cursor-pointer font-medium text-[var(--ink)] select-none">Size chart</summary>
+      <div className="table-wrap mt-3">
+        <table className="table">
+          <thead>
+            <tr>{head.map((h, i) => <th key={i}>{h}</th>)}</tr>
           </thead>
           <tbody>
             {body.map((r, i) => (
-              <tr key={i} className="border-t">{r.map((c, j) => <td key={j} className="p-2">{c}</td>)}</tr>
+              <tr key={i}>{r.map((c, j) => <td key={j}>{c}</td>)}</tr>
             ))}
           </tbody>
         </table>

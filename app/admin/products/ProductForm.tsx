@@ -6,7 +6,7 @@ import { useForm, useAction } from "@/lib/hooks";
 import { Section, TextField, CheckField, ImagesField, SubmitButton } from "@/components/ui/fields";
 
 type Variant = { id?: string; size: string; color: string; stock: number | string };
-const cell = "border p-2 rounded";
+const cell = "input";
 
 export default function ProductForm({ product }: { product?: any }) {
   const router = useRouter();
@@ -65,7 +65,7 @@ export default function ProductForm({ product }: { product?: any }) {
 
   return (
     <form onSubmit={submit} className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{product ? "Edit product" : "Add product"}</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">{product ? "Edit product" : "Add product"}</h1>
       <Section title="Details">
         <TextField label="Name" required {...field("name")} />
         <TextField label="Description" rows={4} required {...field("description")} />
@@ -74,7 +74,7 @@ export default function ProductForm({ product }: { product?: any }) {
         <TextField label="GST % included in the price (confirm the rate with your accountant)" type="number" {...field("gstRate")} />
         <TextField label="HSN code (4 to 8 digits, optional: it appears on GST invoices; ask your accountant for the right code)" {...field("hsnCode")} />
         <label className="block text-sm">Category *
-          <select required className="w-full border p-2 rounded mt-1" value={v.category}
+          <select required className="input mt-1" value={v.category}
             onChange={(e) => setValues((p) => ({ ...p, category: e.target.value }))}>
             <option value="">Select category</option>
             {v.category && !cats.some((c) => c.name === v.category) && <option>{v.category}</option>}
@@ -97,7 +97,7 @@ export default function ProductForm({ product }: { product?: any }) {
               onClick={() => setValues((p) => ({ ...p, variants: p.variants.filter((_, j) => j !== i) }))}>x</button>
           </div>
         ))}
-        <button type="button" className="underline text-sm"
+        <button type="button" className="btn btn-outline btn-sm"
           onClick={() => setValues((p) => ({ ...p, variants: [...p.variants, { size: "", color: "", stock: 0 }] }))}>
           + Add variant
         </button>

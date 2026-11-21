@@ -14,7 +14,7 @@ export default async function MyOrders() {
   const orders = await prisma.order.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
   return (
     <main className="max-w-xl mx-auto p-4 space-y-3">
-      <h1 className="text-2xl font-bold">My orders</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">My orders</h1>
       {orders.map((o) => (
         <Link key={o.id} href={`/orders/${o.id}`} className="block border rounded p-3">
           <div className="flex justify-between">

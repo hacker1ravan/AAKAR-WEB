@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
+import Button from "./ui/Button";
 
 type V = { id: string; size: string; color: string; stock: number };
 type Props = { product: { id: string; name: string; price: number; image: string; variants: V[] } };
@@ -15,33 +16,34 @@ export default function AddToCart({ product }: Props) {
 
   const options = product.variants.filter((v) => v.color === color);
   const variant = options.find((v) => v.size === size);
-  const chip = (on: boolean, off = false) =>
-    `border rounded px-3 py-1 text-sm ${on ? "bg-black text-white" : ""} ${off ? "opacity-40 line-through" : ""}`;
 
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm mb-1">Colour: {color}</p>
+        <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Colour: <span className="font-medium text-[var(--ink)]">{color}</span></p>
         <div className="flex gap-2 flex-wrap">
           {colors.map((c) => (
-            <button key={c} type="button" className={chip(c === color)}
+            <button key={c} type="button" className="chip" data-active={c === color}
               onClick={() => { setColor(c); setSize(""); setAdded(false); }}>{c}</button>
           ))}
         </div>
       </div>
       <div>
-        <p className="text-sm mb-1">Size</p>
+        <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Size</p>
         <div className="flex gap-2 flex-wrap">
           {options.map((v) => (
-            <button key={v.id} type="button" disabled={v.stock < 1} className={chip(v.size === size, v.stock < 1)}
+            <button key={v.id} type="button" disabled={v.stock < 1} data-active={v.size === size}
+              className={`chip ${v.stock < 1 ? "opacity-40 line-through cursor-not-allowed" : ""}`}
               onClick={() => { setSize(v.size); setAdded(false); }}>{v.size}</button>
           ))}
         </div>
-        {variant && variant.stock <= 5 && <p className="text-xs text-red-600 mt-1">Only {variant.stock} left</p>}
+        {variant && variant.stock <= 5 && <p className="text-xs text-red-600 mt-1.5">Only {variant.stock} left</p>}
       </div>
-      <button
+      <Button
+        variant="dark"
+        size="lg"
+        block
         disabled={!variant}
-        className="w-full bg-[var(--primary)] text-[var(--secondary)] p-3 rounded disabled:opacity-40"
         onClick={() => {
           if (!variant) return;
           add({
@@ -52,8 +54,8 @@ export default function AddToCart({ product }: Props) {
         }}
       >
         {variant ? "Add to cart" : "Select a size"}
-      </button>
-      {added && <p className="text-sm">Added! <Link href="/cart" className="underline">View cart</Link></p>}
+      </Button>
+      {added && <p className="text-sm">Added! <Link href="/cart" className="link-underline">View cart</Link></p>}
     </div>
   );
 }

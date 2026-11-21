@@ -23,12 +23,12 @@ export default function Customers() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-2xl font-bold">Customers ({shown.length})</h1>
-        <a href="/api/admin/customers/export" className="border px-3 py-2 rounded text-sm">Download CSV</a>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Customers ({shown.length})</h1>
+        <a href="/api/admin/customers/export" className="btn btn-outline btn-sm">Download CSV</a>
       </div>
       <div className="flex gap-2 text-sm">
-        <input className="border p-2 rounded flex-1" placeholder="Search name, email or phone" aria-label="Search customers" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className="border p-2 rounded" aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}>
+        <input className="input flex-1" placeholder="Search name, email or phone" aria-label="Search customers" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select className="input" aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="new">Newest</option>
           <option value="spent">Top spenders</option>
           <option value="orders">Most orders</option>
@@ -45,7 +45,7 @@ export default function Customers() {
           { header: "Last order", render: (c) => d(c.lastOrder) },
           { header: "Joined", render: (c) => d(c.joined) },
         ]}
-        actions={(c) => <Link href={`/admin/customers/${c.id}`} className="underline">View</Link>}
+        actions={(c) => <Link href={`/admin/customers/${c.id}`} className="btn btn-link btn-sm">View</Link>}
       />
     </div>
   );

@@ -31,7 +31,7 @@ export default function ResetForm({ token }: { token: string }) {
           }, "Password changed!");
         }}
       >
-        <h1 className="text-2xl font-bold">Set new password</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Set new password</h1>
         <TextField label="New password (min 8 characters)" type="password" required {...field("password")} />
         <TextField label="Confirm password" type="password" required {...field("confirm")} />
         {msg && <p className="text-sm">{msg}</p>}

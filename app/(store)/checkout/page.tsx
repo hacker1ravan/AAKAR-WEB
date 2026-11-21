@@ -139,7 +139,7 @@ export default function Checkout() {
   return (
     <main className="max-w-xl mx-auto p-4 space-y-4">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      <h1 className="text-2xl font-bold">Checkout</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Checkout</h1>
 
       <div className="border rounded p-3 text-sm space-y-1">
         {items.map((i) => (
@@ -164,12 +164,12 @@ export default function Checkout() {
 
       <div className="space-y-1">
         <div className="flex gap-2">
-          <input className="flex-1 border p-2 rounded text-sm uppercase" placeholder="Coupon code" aria-label="Coupon code"
+          <input className="input flex-1 text-sm uppercase" placeholder="Coupon code" aria-label="Coupon code"
             value={codeInput} onChange={(e) => setCodeInput(e.target.value)} />
-          <button type="button" className="border px-4 rounded text-sm"
+          <button type="button" className="btn btn-outline btn-sm"
             onClick={() => { setCouponMsg(""); setCoupon(codeInput.trim().toUpperCase()); }}>Apply</button>
           {coupon && (
-            <button type="button" className="underline text-sm"
+            <button type="button" className="btn btn-link btn-sm"
               onClick={() => { setCoupon(""); setCodeInput(""); setCouponMsg(""); }}>Remove</button>
           )}
         </div>
@@ -190,7 +190,7 @@ export default function Checkout() {
         <Section title="Delivery details">
           {loggedIn && saved.length > 0 && (
             <label className="block text-sm">Saved address
-              <select className="w-full border p-2 rounded mt-1" defaultValue={(saved.find((a) => a.isDefault) ?? saved[0]).id}
+              <select className="input mt-1" defaultValue={(saved.find((a) => a.isDefault) ?? saved[0]).id}
                 onChange={(e) => { const a = saved.find((x) => x.id === e.target.value); if (a) fill(a); }}>
                 {saved.map((a) => <option key={a.id} value={a.id}>{a.label || a.name}: {a.address.slice(0, 40)}</option>)}
                 <option value="">Use a different address</option>

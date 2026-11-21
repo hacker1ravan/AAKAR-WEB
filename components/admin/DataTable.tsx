@@ -8,23 +8,23 @@ export function DataTable<T extends { id: string }>({
   actions?: (row: T) => React.ReactNode;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm border">
-        <thead className="bg-gray-100 text-left">
+    <div className="table-wrap">
+      <table className="table">
+        <thead>
           <tr>
-            {cols.map((c) => <th key={c.header} className="p-2">{c.header}</th>)}
-            {actions && <th className="p-2">Actions</th>}
+            {cols.map((c) => <th key={c.header}>{c.header}</th>)}
+            {actions && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id} className="border-t">
-              {cols.map((c) => <td key={c.header} className="p-2 align-top">{c.render(r)}</td>)}
-              {actions && <td className="p-2 space-x-2 whitespace-nowrap align-top">{actions(r)}</td>}
+            <tr key={r.id}>
+              {cols.map((c) => <td key={c.header}>{c.render(r)}</td>)}
+              {actions && <td className="whitespace-nowrap"><div className="flex flex-wrap items-center gap-1">{actions(r)}</div></td>}
             </tr>
           ))}
           {!rows.length && (
-            <tr><td className="p-4 text-center" colSpan={cols.length + (actions ? 1 : 0)}>Nothing here yet</td></tr>
+            <tr><td className="p-6 text-center text-[var(--muted)]" colSpan={cols.length + (actions ? 1 : 0)}>Nothing here yet</td></tr>
           )}
         </tbody>
       </table>

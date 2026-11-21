@@ -10,23 +10,33 @@ export default async function Header() {
     prisma.category.findMany({ where: { active: true }, orderBy: [{ position: "asc" }, { name: "asc" }] }),
   ]);
   return (
-    <header className="border-b sticky top-0 bg-white z-10">
-      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-3">
-        <Link href="/" className="font-bold text-lg shrink-0">
-          {s.logoUrl ? <img src={cld(s.logoUrl, 400)} alt={s.siteName} className="h-8 w-auto" /> : s.siteName}
+    <header className="sticky top-0 z-20 border-b border-[var(--line)] bg-[var(--surface)]/85 backdrop-blur-md">
+      <div className="container-x flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3.5">
+        <Link href="/" className="shrink-0 font-serif text-2xl font-semibold tracking-tight">
+          {s.logoUrl ? (
+            <img src={cld(s.logoUrl, 400)} alt={s.siteName} className="h-9 w-auto" />
+          ) : (
+            s.siteName
+          )}
         </Link>
-        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm [&>*]:whitespace-nowrap">
-          <Link href="/products">Shop</Link>
+        <nav className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm [&>*]:whitespace-nowrap">
+          <Link href="/products" className="link-underline">Shop</Link>
           <HeaderActions />
         </nav>
       </div>
       {cats.length > 0 && (
-        <div className="max-w-6xl mx-auto flex gap-4 overflow-x-auto px-3 pb-2 text-sm">
-          {cats.map((c) => (
-            <Link key={c.id} href={`/products?category=${encodeURIComponent(c.name)}`} className="whitespace-nowrap">
-              {c.name}
-            </Link>
-          ))}
+        <div className="border-t border-[var(--line)]">
+          <div className="container-x flex gap-2 overflow-x-auto py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {cats.map((c) => (
+              <Link
+                key={c.id}
+                href={`/products?category=${encodeURIComponent(c.name)}`}
+                className="chip"
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </header>

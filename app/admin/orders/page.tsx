@@ -9,7 +9,7 @@ import { TextField, CheckField, SubmitButton } from "@/components/ui/fields";
 import { fmtDate } from "@/lib/format";
 
 const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled"];
-const box = "border p-2 rounded text-sm";
+const box = "input text-sm";
 
 export default function AdminOrders() {
   const [data, setData] = useState<{ orders: any[]; total: number; page: number; pages: number; couriers: string[] } | null>(null);
@@ -30,8 +30,8 @@ export default function AdminOrders() {
   useEffect(() => { load(1); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Orders{data ? ` (${data.total})` : ""}</h1>
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Orders{data ? ` (${data.total})` : ""}</h1>
       <ExportOrders />
 
       <form className="flex flex-wrap gap-2" onSubmit={(e) => { e.preventDefault(); load(1); }}>
@@ -46,7 +46,7 @@ export default function AdminOrders() {
           <option value="online">Online</option>
           <option value="cod">COD</option>
         </select>
-        <button className="bg-black text-white px-4 rounded text-sm">Search</button>
+        <button className="btn btn-dark btn-sm">Search</button>
       </form>
       {err && <p className="text-sm text-red-600">{err}</p>}
 
@@ -62,9 +62,9 @@ export default function AdminOrders() {
         ]}
         actions={(o) => (
           <>
-            <button className="underline" onClick={() => setSel(o)}>Manage</button>
+            <button className="btn btn-link btn-sm" onClick={() => setSel(o)}>Manage</button>
             {!["pending", "cancelled"].includes(o.status) && (
-              <a className="underline" href={`/admin/orders/${o.id}/label`} target="_blank" rel="noreferrer">Label</a>
+              <a className="btn btn-link btn-sm" href={`/admin/orders/${o.id}/label`} target="_blank" rel="noreferrer">Label</a>
             )}
           </>
         )}
@@ -72,9 +72,9 @@ export default function AdminOrders() {
 
       {data && data.pages > 1 && (
         <div className="flex items-center gap-4 text-sm">
-          <button className="border rounded px-3 py-1 disabled:opacity-40" disabled={page <= 1} onClick={() => load(page - 1)}>Previous</button>
-          <span>Page {data.page} of {data.pages}</span>
-          <button className="border rounded px-3 py-1 disabled:opacity-40" disabled={page >= data.pages} onClick={() => load(page + 1)}>Next</button>
+          <button className="btn btn-outline btn-sm" disabled={page <= 1} onClick={() => load(page - 1)}>Previous</button>
+          <span className="text-[var(--ink-soft)]">Page {data.page} of {data.pages}</span>
+          <button className="btn btn-outline btn-sm" disabled={page >= data.pages} onClick={() => load(page + 1)}>Next</button>
         </div>
       )}
 
@@ -100,13 +100,13 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
 
   return (
     <form
-      className="border rounded-lg p-4 space-y-3 max-w-xl"
+      className="surface p-4 md:p-5 space-y-3 max-w-xl shadow-[var(--shadow-md)]"
       onSubmit={(e) => {
         e.preventDefault();
         run(async () => { await api(`/api/admin/orders/${order.id}`, "PUT", v); onDone(); }, "Updated!");
       }}
     >
-      <h2 className="font-semibold">Order #{order.id.slice(-8).toUpperCase()}</h2>
+      <h2 className="font-serif text-lg font-semibold">Order #{order.id.slice(-8).toUpperCase()}</h2>
       <div className="text-sm">
         <p>{order.shippingName} · {order.shippingPhone}</p>
         <p>{order.shippingAddress}</p>
@@ -115,14 +115,14 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
         </p>
         <p>{order.items.length} item(s) · {order.user.email}{order.user.role === "guest" ? " (guest checkout)" : ""}</p>
         {!["pending", "cancelled"].includes(order.status) && (
-          <p className="space-x-3">
-            <a href={`/invoice/${order.id}`} target="_blank" rel="noreferrer" className="underline">View invoice</a>
-            <a href={`/admin/orders/${order.id}/label`} target="_blank" rel="noreferrer" className="underline">Print label</a>
+          <p className="space-x-2 mt-1">
+            <a href={`/invoice/${order.id}`} target="_blank" rel="noreferrer" className="btn btn-link btn-sm">View invoice</a>
+            <a href={`/admin/orders/${order.id}/label`} target="_blank" rel="noreferrer" className="btn btn-link btn-sm">Print label</a>
           </p>
         )}
       </div>
       <label className="block text-sm">Status
-        <select className="w-full border p-2 rounded mt-1" value={st.value}
+        <select className="input mt-1" value={st.value}
           onChange={(e) => st.onChange(e.target.value)}>
           {STATUSES.map((s) => <option key={s}>{s}</option>)}
         </select>
@@ -130,7 +130,7 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
       {v.status === "shipped" && (
         <>
           <label className="block text-sm">Courier
-            <select className="w-full border p-2 rounded mt-1" value={custom ? "__other" : v.courier}
+            <select className="input mt-1" value={custom ? "__other" : v.courier}
               onChange={(e) => {
                 if (e.target.value === "__other") { setCustom(true); setValues((p) => ({ ...p, courier: "" })); }
                 else { setCustom(false); setValues((p) => ({ ...p, courier: e.target.value })); }
@@ -149,7 +149,7 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
       <CheckField label="Email the customer" {...field("notify")} />
       {msg && <p className="text-sm">{msg}</p>}
       <SubmitButton loading={loading}>Update order</SubmitButton>
-      <button type="button" className="underline text-sm" onClick={onDone}>Close</button>
+      <button type="button" className="btn btn-link btn-sm" onClick={onDone}>Close</button>
     </form>
   );
 }

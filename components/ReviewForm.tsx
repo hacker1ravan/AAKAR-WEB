@@ -27,7 +27,7 @@ export default function ReviewForm({
       <h3 className="font-semibold">{mine ? "Edit your review" : "Write a review"}</h3>
       {mine && <p className="text-xs">Current status: {mine.status}. Editing sends it for approval again.</p>}
       <label className="block text-sm">Rating
-        <select className="w-full border p-2 rounded mt-1" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+        <select className="input mt-1" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
           {[5, 4, 3, 2, 1].map((n) => <option key={n} value={n}>{"★".repeat(n)} ({n})</option>)}
         </select>
       </label>

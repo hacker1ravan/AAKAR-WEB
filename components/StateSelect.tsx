@@ -7,7 +7,7 @@ export default function StateSelect({
   return (
     <label className="block text-sm">
       {label}{required && " *"}
-      <select className="w-full border p-2 rounded mt-1" value={value} required={required} onChange={(e) => onChange(e.target.value)}>
+      <select className="input mt-1" value={value} required={required} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select state</option>
         {STATES.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
       </select>

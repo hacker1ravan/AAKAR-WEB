@@ -4,6 +4,7 @@ import { getSettings } from "@/lib/settings";
 import ProductCard from "@/components/ProductCard";
 import BannerSlider from "@/components/BannerSlider";
 import Photo from "@/components/Photo";
+import { ButtonLink } from "@/components/ui/Button";
 
 export default async function Home() {
   const now = new Date();
@@ -28,30 +29,54 @@ export default async function Home() {
       {banners.length > 0 ? (
         <BannerSlider banners={banners} />
       ) : (
-        <section className="text-center py-16 px-4 bg-[var(--primary)] text-[var(--secondary)]">
-          <h1 className="text-3xl md:text-5xl font-bold">{s.siteName}</h1>
-          {s.tagline && <p className="mt-2">{s.tagline}</p>}
-          <Link href="/products" className="inline-block mt-6 px-6 py-3 rounded bg-[var(--accent)] text-white">Shop now</Link>
+        <section className="bg-[var(--primary)] px-4 py-24 text-center text-[var(--secondary)]">
+          <p className="eyebrow text-current opacity-70">Welcome to</p>
+          <h1 className="mt-3 font-serif text-4xl font-semibold tracking-tight md:text-6xl">{s.siteName}</h1>
+          {s.tagline && <p className="mx-auto mt-4 max-w-md text-base opacity-90">{s.tagline}</p>}
+          <ButtonLink href="/products" size="lg" className="mt-8">Shop now</ButtonLink>
         </section>
       )}
 
-      <section className="max-w-6xl mx-auto p-4">
+      <section className="container-x py-12 md:py-16">
         {cats.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-4">
-            {cats.map((c) => (
-              <Link key={c.id} href={`/products?category=${encodeURIComponent(c.name)}`}
-                className="relative block aspect-square rounded overflow-hidden bg-gray-100">
-                {c.imageUrl && <Photo src={c.imageUrl} alt={c.name} width={500} sizes="(min-width: 768px) 25vw, 50vw" className="w-full h-full object-cover" />}
-                <span className="absolute inset-x-0 bottom-0 bg-black/50 text-white text-center p-2 text-sm">{c.name}</span>
-              </Link>
-            ))}
-          </div>
+          <>
+            <div className="mb-6 flex items-end justify-between">
+              <h2 className="font-serif text-2xl font-semibold tracking-tight md:text-3xl">Shop by category</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {cats.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/products?category=${encodeURIComponent(c.name)}`}
+                  className="group relative block aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-[var(--surface-2)] ring-1 ring-[var(--line)]"
+                >
+                  {c.imageUrl && (
+                    <Photo
+                      src={c.imageUrl}
+                      alt={c.name}
+                      width={500}
+                      sizes="(min-width: 768px) 25vw, 50vw"
+                      className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-105"
+                    />
+                  )}
+                  <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+                  <span className="absolute inset-x-0 bottom-0 p-4 font-serif text-lg font-medium text-white">{c.name}</span>
+                </Link>
+              ))}
+            </div>
+          </>
         )}
-        <h2 className="text-xl font-semibold my-4">New arrivals</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+        <div className="mb-6 mt-14 flex items-end justify-between">
+          <h2 className="font-serif text-2xl font-semibold tracking-tight md:text-3xl">New arrivals</h2>
+          <Link href="/products" className="link-underline text-sm">View all</Link>
+        </div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4">
           {products.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
-        {!products.length && <p className="text-center py-12">Products will appear here once you add them in the admin panel.</p>}
+        {!products.length && (
+          <p className="py-16 text-center text-[var(--muted)]">Products will appear here once you add them in the admin panel.</p>
+        )}
       </section>
     </main>
   );

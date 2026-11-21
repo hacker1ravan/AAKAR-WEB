@@ -21,7 +21,7 @@ export default function OrderView({
 
   return (
     <main className="max-w-xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Order #{order.id.slice(-8).toUpperCase()}</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Order #{order.id.slice(-8).toUpperCase()}</h1>
       <p>Status: <b className="capitalize">{order.status}</b> · Total {inr(order.total)}</p>
       {canCancel && (
         <OrderActions orderId={order.id} accessToken={guestToken} canPay={canPay} amountLabel={inr(order.total)} />

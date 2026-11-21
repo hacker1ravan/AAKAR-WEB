@@ -20,7 +20,7 @@ export default function ForgotPassword() {
           );
         }}
       >
-        <h1 className="text-2xl font-bold">Forgot password</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Forgot password</h1>
         <p className="text-sm">Enter your email and we will send you a link to reset your password.</p>
         <TextField label="Email" type="email" required {...field("email")} />
         {msg && <p className="text-sm">{msg}</p>}

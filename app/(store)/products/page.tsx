@@ -2,11 +2,12 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import { ButtonLink } from "@/components/ui/Button";
 
 type SP = Record<string, string | undefined>;
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const paise = (x?: string) => (x && !isNaN(Number(x)) ? Math.round(Number(x) * 100) : undefined);
-const box = "border p-2 rounded";
+const box = "input";
 const PAGE_SIZE = 12;
 
 export const metadata = { title: "Shop" };
@@ -74,7 +75,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
         <label className="col-span-2 flex items-center gap-2">
           <input type="checkbox" name="sale" value="1" defaultChecked={!!sp.sale} /> On sale only
         </label>
-        <button className="col-span-2 md:col-span-8 bg-[var(--primary)] text-[var(--secondary)] rounded p-2">Apply filters</button>
+        <button className="btn btn-dark col-span-2 md:col-span-8">Apply filters</button>
       </form>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {products.map((p) => <ProductCard key={p.id} p={p} />)}
@@ -83,9 +84,9 @@ export default async function Products({ searchParams }: { searchParams: Promise
 
       {pages > 1 && (
         <nav className="flex items-center justify-center gap-4 mt-8 text-sm" aria-label="Pages">
-          {page > 1 ? <Link href={pageHref(sp, page - 1)} className="border rounded px-3 py-1">Previous</Link> : <span className="opacity-40 border rounded px-3 py-1">Previous</span>}
-          <span>Page {page} of {pages} ({total} products)</span>
-          {page < pages ? <Link href={pageHref(sp, page + 1)} className="border rounded px-3 py-1">Next</Link> : <span className="opacity-40 border rounded px-3 py-1">Next</span>}
+          {page > 1 ? <ButtonLink href={pageHref(sp, page - 1)} variant="outline" size="sm">Previous</ButtonLink> : <span className="btn btn-outline btn-sm opacity-40 pointer-events-none">Previous</span>}
+          <span className="text-[var(--ink-soft)]">Page {page} of {pages} ({total} products)</span>
+          {page < pages ? <ButtonLink href={pageHref(sp, page + 1)} variant="outline" size="sm">Next</ButtonLink> : <span className="btn btn-outline btn-sm opacity-40 pointer-events-none">Next</span>}
         </nav>
       )}
     </main>

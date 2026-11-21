@@ -22,25 +22,25 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
   return (
     <Section title="Saved addresses">
       {rows.map((a) => (
-        <div key={a.id} className="border rounded p-3 text-sm space-y-1">
+        <div key={a.id} className="surface p-3 text-sm space-y-1">
           <p className="font-medium">
-            {a.label || a.name}{a.isDefault && <span className="ml-2 text-xs border rounded px-1">Default</span>}
+            {a.label || a.name}{a.isDefault && <span className="badge badge-muted ml-2">Default</span>}
           </p>
           <p>{a.name} · {a.phone}</p>
           <p className="whitespace-pre-line">{a.address}</p>
           <p>{stateName(a.state)} · PIN {a.pincode}</p>
           <div className="flex gap-3 pt-1">
-            <button className="underline" onClick={() => {
+            <button className="btn btn-link btn-sm" onClick={() => {
               setEditId(a.id); setOpen(true);
               setValues({ label: a.label, name: a.name, phone: a.phone, pincode: a.pincode, state: a.state, address: a.address, isDefault: a.isDefault });
             }}>Edit</button>
             {!a.isDefault && (
-              <button className="underline" onClick={() =>
+              <button className="btn btn-link btn-sm" onClick={() =>
                 run(async () => { await api(`/api/account/addresses/${a.id}`, "PUT", { ...a, isDefault: true }); await reload(); }, "Default address changed")}>
                 Make default
               </button>
             )}
-            <button className="underline" onClick={() => {
+            <button className="btn btn-link btn-sm" onClick={() => {
               if (confirm("Delete this address?"))
                 run(async () => { await api(`/api/account/addresses/${a.id}`, "DELETE"); await reload(); }, "Address deleted");
             }}>Delete</button>
@@ -51,7 +51,7 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
 
       {open ? (
         <form
-          className="space-y-3 border rounded p-3"
+          className="space-y-3 surface p-4"
           onSubmit={(e) => {
             e.preventDefault();
             run(async () => {
@@ -70,10 +70,10 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
           <TextField label="Full address" rows={3} required {...field("address")} />
           <CheckField label="Use as my default address" {...field("isDefault")} />
           <SubmitButton loading={loading}>{editId ? "Save changes" : "Save address"}</SubmitButton>
-          <button type="button" className="underline text-sm" onClick={close}>Cancel</button>
+          <button type="button" className="btn btn-link btn-sm" onClick={close}>Cancel</button>
         </form>
       ) : (
-        <button className="underline text-sm" onClick={() => setOpen(true)}>+ Add an address</button>
+        <button className="btn btn-outline btn-sm" onClick={() => setOpen(true)}>+ Add an address</button>
       )}
       {msg && <p className="text-sm">{msg}</p>}
     </Section>

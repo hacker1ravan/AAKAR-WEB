@@ -53,23 +53,23 @@ export default function LoginForm({ next, verified }: { next: string; verified: 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 border p-6 rounded-lg">
-        <h1 className="text-2xl font-bold">Login</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Login</h1>
         {info && <p className="text-green-700 text-sm">{info}</p>}
         {error && <p className="text-red-600 text-sm">{error}</p>}
         {notVerified && (
-          <button type="button" className="underline text-sm" onClick={resend}>Send the confirmation email again</button>
+          <button type="button" className="btn btn-link btn-sm" onClick={resend}>Send the confirmation email again</button>
         )}
-        <input className="w-full border p-2 rounded" type="email" placeholder="Email" aria-label="Email"
+        <input className="input" type="email" placeholder="Email" aria-label="Email"
           value={email} onChange={(e) => setEmail(e.target.value)} readOnly={needCode} required />
-        <input className="w-full border p-2 rounded" type="password" placeholder="Password" aria-label="Password"
+        <input className="input" type="password" placeholder="Password" aria-label="Password"
           value={password} onChange={(e) => setPassword(e.target.value)} readOnly={needCode} required />
         {needCode && (
-          <input className="w-full border p-2 rounded tracking-widest" inputMode="text" autoComplete="one-time-code" autoFocus
+          <input className="input tracking-widest" inputMode="text" autoComplete="one-time-code" autoFocus
             placeholder="123456 or backup code" aria-label="Two-factor code"
             value={code} onChange={(e) => setCode(e.target.value)} required />
         )}
         <p className="text-sm"><Link href="/forgot-password" className="underline">Forgot password?</Link></p>
-        <button disabled={loading} className="w-full bg-black text-white p-2 rounded disabled:opacity-50">
+        <button disabled={loading} className="btn btn-dark btn-block">
           {loading ? "Signing in..." : needCode ? "Verify and log in" : "Login"}
         </button>
         <p className="text-sm">No account? <Link href="/register" className="underline">Register</Link></p>

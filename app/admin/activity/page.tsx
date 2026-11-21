@@ -15,12 +15,12 @@ export default function Activity() {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Activity{data ? ` (${data.total})` : ""}</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Activity{data ? ` (${data.total})` : ""}</h1>
       <p className="text-sm">Who changed what in the admin panel, plus admin sign-ins and privacy requests. Kept for one year.</p>
       <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); load(1); }}>
-        <input className="border p-2 rounded text-sm flex-1" placeholder="Search person, action or details" aria-label="Search activity"
+        <input className="input text-sm flex-1" placeholder="Search person, action or details" aria-label="Search activity"
           value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="bg-black text-white px-4 rounded text-sm">Search</button>
+        <button className="btn btn-dark btn-sm">Search</button>
       </form>
       {err && <p className="text-sm text-red-600">{err}</p>}
       <DataTable
@@ -35,9 +35,9 @@ export default function Activity() {
       />
       {data && data.pages > 1 && (
         <div className="flex items-center gap-4 text-sm">
-          <button className="border rounded px-3 py-1 disabled:opacity-40" disabled={data.page <= 1} onClick={() => load(data.page - 1)}>Previous</button>
+          <button className="btn btn-outline btn-sm" disabled={data.page <= 1} onClick={() => load(data.page - 1)}>Previous</button>
           <span>Page {data.page} of {data.pages}</span>
-          <button className="border rounded px-3 py-1 disabled:opacity-40" disabled={data.page >= data.pages} onClick={() => load(data.page + 1)}>Next</button>
+          <button className="btn btn-outline btn-sm" disabled={data.page >= data.pages} onClick={() => load(data.page + 1)}>Next</button>
         </div>
       )}
     </div>

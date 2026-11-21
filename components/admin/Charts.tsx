@@ -33,7 +33,7 @@ export function HBars({ rows, format }: { rows: Point[]; format: (n: number) => 
             <span className="truncate">{r.label}</span>
             <span className="whitespace-nowrap">{format(r.value)}{r.sub && ` · ${r.sub}`}</span>
           </div>
-          <div className="h-2 bg-gray-100 rounded">
+          <div className="h-2 bg-[var(--surface-2)] rounded">
             <div className="h-2 rounded bg-[var(--primary)]" style={{ width: `${(r.value / max) * 100}%` }} />
           </div>
         </div>

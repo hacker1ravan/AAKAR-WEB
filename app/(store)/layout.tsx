@@ -26,7 +26,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
   return (
     <>
       {s.maintenanceMode && (
-        <div className="bg-yellow-400 text-black text-center text-sm p-2">
+        <div className="border-b border-[color-mix(in_oklab,#f59e0b_40%,var(--line))] bg-[color-mix(in_oklab,#f59e0b_16%,var(--surface))] p-2 text-center text-sm font-medium text-[var(--ink)]">
           Maintenance mode is ON. Only admins can see the store.
         </div>
       )}

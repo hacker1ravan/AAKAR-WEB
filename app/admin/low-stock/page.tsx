@@ -17,11 +17,11 @@ function Restock({ v, t, onSaved }: { v: any; t: number; onSaved: () => void }) 
   return (
     <div className={`flex items-center gap-2 border rounded p-1 text-xs ${tone}`}>
       <span className="w-28 truncate">{v.color} · {v.size}</span>
-      <input type="number" min={0} className="w-16 border p-1 rounded" aria-label="Stock" value={val}
+      <input type="number" min={0} className="input w-16 !py-1 text-xs" aria-label="Stock" value={val}
         onChange={(e) => setVal(e.target.value)} />
       {v.stock === 0 && <b className="text-red-600">Out</b>}
       {changed && (
-        <button className="underline" disabled={busy}
+        <button className="btn btn-dark btn-sm" disabled={busy}
           onClick={async () => {
             setBusy(true); setErr("");
             try {
@@ -56,12 +56,11 @@ export default function LowStock() {
     byCat.set(p.category, c);
   }
   const shown = products.filter((p) => (!cat || p.category === cat) && (!onlyOut || p.outCount > 0));
-  const pill = (on: boolean) => `border rounded-full px-3 py-1 text-sm whitespace-nowrap ${on ? "bg-black text-white" : ""}`;
 
   return (
     <div className="p-4 space-y-4 max-w-5xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold">Low stock</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Low stock</h1>
         <p className="text-sm">
           Showing products with a size or colour at {t} or less.{" "}
           <Link href="/admin/settings" className="underline">Change this number</Link>
@@ -69,9 +68,9 @@ export default function LowStock() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-1">
-        <button className={pill(!cat)} onClick={() => setCat("")}>All ({products.length})</button>
+        <button className="chip" data-active={!cat} onClick={() => setCat("")}>All ({products.length})</button>
         {[...byCat].map(([name, c]) => (
-          <button key={name} className={pill(cat === name)} onClick={() => setCat(name)}>
+          <button key={name} className="chip" data-active={cat === name} onClick={() => setCat(name)}>
             {name} ({c.products}){c.out > 0 && <span className="text-red-500"> · {c.out} out</span>}
           </button>
         ))}
@@ -109,7 +108,7 @@ export default function LowStock() {
             ),
           },
         ]}
-        actions={(p) => <Link href={`/admin/products/${p.id}`} className="underline">Edit product</Link>}
+        actions={(p) => <Link href={`/admin/products/${p.id}`} className="btn btn-link btn-sm">Edit product</Link>}
       />
       {!shown.length && <p className="text-center text-sm">Nothing is low on stock. 🎉</p>}
     </div>

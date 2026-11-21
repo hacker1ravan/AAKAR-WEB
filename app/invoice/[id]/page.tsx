@@ -122,7 +122,7 @@ export default async function Invoice({
       <p className="text-xs">{gst ? "All prices include GST. " : ""}This is a computer generated invoice.</p>
       <div className="flex gap-3 items-center print:hidden">
         <PrintButton />
-        <Link href={pdfHref} className="border rounded px-4 py-2">Download PDF</Link>
+        <Link href={pdfHref} className="btn btn-outline">Download PDF</Link>
       </div>
     </main>
   );

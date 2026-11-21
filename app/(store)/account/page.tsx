@@ -22,7 +22,7 @@ export default async function Account() {
   return (
     <main className="max-w-xl mx-auto p-4 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">My account</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">My account</h1>
         <p className="text-sm">{row.email} · <Link href="/orders" className="underline">My orders</Link></p>
       </div>
       <ProfileForm name={row.name ?? ""} />

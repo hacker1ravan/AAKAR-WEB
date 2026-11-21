@@ -9,11 +9,11 @@ type Status = { enabled: boolean; recoveryLeft: number; required: boolean };
 
 function Codes({ codes }: { codes: string[] }) {
   return (
-    <div className="border rounded p-3 space-y-2 text-sm">
+    <div className="surface p-4 space-y-2 text-sm">
       <p className="font-medium">Your backup codes</p>
       <p>Keep these somewhere safe, like a password manager. Each one works once if you lose your phone. They will not be shown again.</p>
       <ul className="grid grid-cols-2 gap-1 font-mono">{codes.map((c) => <li key={c}>{c}</li>)}</ul>
-      <button type="button" className="underline" onClick={() => navigator.clipboard?.writeText(codes.join("\n"))}>Copy all</button>
+      <button type="button" className="btn btn-outline btn-sm" onClick={() => navigator.clipboard?.writeText(codes.join("\n"))}>Copy all</button>
     </div>
   );
 }
@@ -33,7 +33,7 @@ export default function Security() {
   if (!st) return <p className="p-6">Loading...</p>;
   return (
     <div className="p-4 space-y-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold">Security</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Security</h1>
       {st.required && !st.enabled && (
         <p className="border border-red-600 text-red-700 rounded p-3 text-sm">
           This store requires two-factor login for admins. Set it up below to use the rest of the admin panel.
@@ -47,7 +47,7 @@ export default function Security() {
             from an authenticator app (Google Authenticator, Authy, 1Password and others).
           </p>
           {!setup ? (
-            <button className="bg-black text-white rounded px-4 py-2 text-sm"
+            <button className="btn btn-dark"
               onClick={() => run(async () => setSetup(await api("/api/admin/security/setup", "POST")), "")}>
               Set up two-factor login
             </button>

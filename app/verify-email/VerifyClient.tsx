@@ -20,14 +20,14 @@ export default function VerifyClient({ token }: { token: string }) {
         {state === "working" && <p>Confirming your email...</p>}
         {state === "done" && (
           <>
-            <h1 className="text-2xl font-bold">Email confirmed</h1>
+            <h1 className="font-serif text-3xl font-semibold tracking-tight">Email confirmed</h1>
             <p className="text-sm">Your account is ready. You can log in now.</p>
-            <Link href="/login?verified=1" className="block bg-black text-white p-2 rounded">Log in</Link>
+            <Link href="/login?verified=1" className="btn btn-dark btn-block">Log in</Link>
           </>
         )}
         {state === "error" && (
           <>
-            <h1 className="text-2xl font-bold">Could not confirm</h1>
+            <h1 className="font-serif text-3xl font-semibold tracking-tight">Could not confirm</h1>
             <p className="text-sm">{msg}</p>
             <Link href="/login" className="underline text-sm">Go to login</Link>
           </>

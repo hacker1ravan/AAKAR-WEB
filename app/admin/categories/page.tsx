@@ -38,8 +38,8 @@ export default function AdminCategories() {
   };
 
   return (
-    <div className="p-4 space-y-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold">Categories</h1>
+    <div className="p-4 md:p-6 space-y-6 max-w-3xl mx-auto">
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Categories</h1>
 
       <form onSubmit={submit} className="space-y-3">
         <Section title={editId ? "Edit category" : "Add category"}>
@@ -53,7 +53,7 @@ export default function AdminCategories() {
         </Section>
         {msg && <p className="text-sm">{msg}</p>}
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Add category"}</SubmitButton>
-        {editId && <button type="button" className="underline text-sm" onClick={reset}>Cancel edit</button>}
+        {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>
 
       <DataTable
@@ -61,14 +61,14 @@ export default function AdminCategories() {
         cols={[
           { header: "", render: (c) => c.imageUrl ? <img src={cld(c.imageUrl, 96)} alt="" className="h-10 w-10 object-cover rounded" /> : null },
           { header: "Name", render: (c) => c.name },
-          { header: "Products", render: (c) => <Link href={`/admin/products?category=${encodeURIComponent(c.name)}`} className="underline">{c.products}</Link> },
+          { header: "Products", render: (c) => <Link href={`/admin/products?category=${encodeURIComponent(c.name)}`} className="btn btn-link btn-sm">{c.products}</Link> },
           { header: "Order", render: (c) => c.position },
           { header: "Visible", render: (c) => (c.active ? "Yes" : "Hidden") },
           { header: "COD", render: (c) => (c.codAvailable ? "Yes" : "No") },
         ]}
         actions={(c) => (
           <>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-link btn-sm" onClick={() => {
               setEditId(c.id);
               setValues({
                 name: c.name, imageUrl: c.imageUrl, position: String(c.position),
@@ -76,7 +76,7 @@ export default function AdminCategories() {
               });
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}>Edit</button>
-            <button className="underline" onClick={() => {
+            <button className="btn btn-danger btn-sm" onClick={() => {
               if (!confirm(`Delete "${c.name}"?`)) return;
               run(async () => {
                 try {

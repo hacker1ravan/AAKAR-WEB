@@ -3,10 +3,10 @@ import { useState } from "react";
 import { cld } from "@/lib/img";
 
 type F<V> = { label: string; value: V; onChange: (v: V) => void };
-const input = "w-full border p-2 rounded mt-1";
+const input = "input mt-1";
 
 export const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="border rounded-lg p-4 space-y-3">
+  <section className="surface p-4 space-y-3">
     <h2 className="font-semibold">{title}</h2>
     {children}
   </section>
@@ -58,8 +58,8 @@ export const ImageField = ({ label, value, onChange, hint }: F<string> & { hint?
       {hint && <p className="text-xs">{hint}</p>}
       {value && (
         <div className="flex items-center gap-3 my-2">
-          <img src={cld(value, 200)} alt="" className="h-14 max-w-40 object-contain border bg-gray-50 p-1" />
-          <button type="button" className="underline text-xs" onClick={() => onChange("")}>Remove</button>
+          <img src={cld(value, 200)} alt="" className="h-14 max-w-40 object-contain border border-[var(--line)] bg-[var(--surface-2)] rounded-[var(--radius-sm)] p-1" />
+          <button type="button" className="btn btn-link btn-sm" onClick={() => onChange("")}>Remove</button>
         </div>
       )}
       <input type="file" accept="image/*" className="block mt-1" disabled={busy}
@@ -82,9 +82,9 @@ export const ImagesField = ({ label, value, onChange }: F<string[]>) => (
     <div className="flex gap-2 flex-wrap my-2">
       {value.map((u) => (
         <div key={u} className="relative">
-          <img src={cld(u, 200)} alt="" className="h-20 border" />
-          <button type="button" aria-label="Remove image" className="absolute top-0 right-0 bg-black text-white px-1"
-            onClick={() => onChange(value.filter((x) => x !== u))}>x</button>
+          <img src={cld(u, 200)} alt="" className="h-20 border border-[var(--line)] rounded-[var(--radius-sm)]" />
+          <button type="button" aria-label="Remove image" className="absolute -top-2 -right-2 grid h-6 w-6 place-items-center rounded-full bg-[var(--ink)] text-white text-xs shadow-[var(--shadow-sm)]"
+            onClick={() => onChange(value.filter((x) => x !== u))}>×</button>
         </div>
       ))}
     </div>
@@ -98,7 +98,7 @@ export const ImagesField = ({ label, value, onChange }: F<string[]>) => (
 );
 
 export const SubmitButton = ({ loading, children }: { loading: boolean; children: React.ReactNode }) => (
-  <button disabled={loading} className="w-full bg-black text-white p-2 rounded disabled:opacity-50">
+  <button disabled={loading} className="btn btn-dark btn-block">
     {loading ? "Please wait..." : children}
   </button>
 );

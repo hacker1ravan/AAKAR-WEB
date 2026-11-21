@@ -55,11 +55,11 @@ export default function OrderActions({
       )}
       <div className="flex gap-3 flex-wrap">
         {canPay && (
-          <button disabled={loading} onClick={pay} className="bg-black text-white rounded px-4 py-2 disabled:opacity-50">
+          <button disabled={loading} onClick={pay} className="btn btn-dark disabled:opacity-50">
             {loading ? "Please wait..." : `Pay now ${amountLabel}`}
           </button>
         )}
-        <button disabled={loading} onClick={cancel} className="border rounded px-4 py-2 disabled:opacity-50">Cancel order</button>
+        <button disabled={loading} onClick={cancel} className="btn btn-outline">Cancel order</button>
       </div>
       {msg && <p className="text-red-600">{msg}</p>}
     </div>

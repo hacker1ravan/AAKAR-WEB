@@ -75,22 +75,24 @@ export default async function ProductPage({ params }: P) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-      <main className="max-w-5xl mx-auto p-4 grid md:grid-cols-2 gap-6">
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2">
+      <main className="container-x grid gap-8 py-8 md:grid-cols-2 md:gap-12">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {p.images.map((u, idx) => (
-            <Photo key={u} src={u} alt={p.name} width={900} priority={idx === 0} sizes="(min-width: 768px) 50vw, 100vw" className="snap-center shrink-0 w-full rounded object-cover" />
+            <Photo key={u} src={u} alt={p.name} width={900} priority={idx === 0} sizes="(min-width: 768px) 50vw, 100vw" className="w-full shrink-0 snap-center rounded-[var(--radius-lg)] object-cover ring-1 ring-[var(--line)]" />
           ))}
         </div>
-        <div className="space-y-4">
-          <p className="text-sm">{p.category}</p>
-          <div className="flex items-start justify-between gap-2">
-            <h1 className="text-2xl font-bold">{p.name}</h1>
+        <div className="space-y-5">
+          <p className="eyebrow">{p.category}</p>
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">{p.name}</h1>
             <HeartButton id={p.id} />
           </div>
           {reviews.length > 0 && (
-            <p className="text-sm">★ {avg.toFixed(1)} ({reviews.length} review{reviews.length > 1 ? "s" : ""})</p>
+            <p className="text-sm text-[var(--ink-soft)]">
+              <span className="text-[var(--accent)]">★</span> {avg.toFixed(1)} ({reviews.length} review{reviews.length > 1 ? "s" : ""})
+            </p>
           )}
-          <Price price={p.price} compare={p.comparePrice} className="text-xl" />
+          <Price price={p.price} compare={p.comparePrice} className="text-2xl" />
           <AddToCart
             product={{
               id: p.id, name: p.name, price: p.price, image: p.images[0],
@@ -104,7 +106,9 @@ export default async function ProductPage({ params }: P) {
             </p>
           )}
           <SizeChart text={cat?.sizeChart ?? ""} />
-          <p className="whitespace-pre-line text-sm">{p.description}</p>
+          <div className="border-t border-[var(--line)] pt-5">
+            <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-soft)]">{p.description}</p>
+          </div>
         </div>
       </main>
 
@@ -117,9 +121,9 @@ export default async function ProductPage({ params }: P) {
       />
 
       {related.length > 0 && (
-        <section className="max-w-5xl mx-auto p-4">
-          <h2 className="text-xl font-semibold mb-3">You may also like</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <section className="container-x py-12">
+          <h2 className="mb-6 font-serif text-2xl font-semibold tracking-tight">You may also like</h2>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4">
             {related.map((r) => <ProductCard key={r.id} p={r} />)}
           </div>
         </section>

@@ -21,9 +21,9 @@ export default function PincodeCheck() {
   return (
     <div className="space-y-1 text-sm">
       <div className="flex gap-2">
-        <input inputMode="numeric" maxLength={6} placeholder="Pincode" aria-label="Pincode" className="border p-2 rounded w-36"
+        <input inputMode="numeric" maxLength={6} placeholder="Pincode" aria-label="Pincode" className="input w-36"
           value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} />
-        <button type="button" disabled={busy || pin.length !== 6} className="border px-3 rounded disabled:opacity-40" onClick={check}>
+        <button type="button" disabled={busy || pin.length !== 6} className="btn btn-outline" onClick={check}>
           Check delivery
         </button>
       </div>

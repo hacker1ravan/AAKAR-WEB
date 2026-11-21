@@ -22,9 +22,9 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="p-4 space-y-4 max-w-3xl mx-auto">
-      <Link href="/admin/customers" className="underline text-sm">Back to customers</Link>
-      <h1 className="text-2xl font-bold">{user.name || user.email}</h1>
-      <div className="border rounded p-3 text-sm space-y-1">
+      <Link href="/admin/customers" className="btn btn-link btn-sm">← Back to customers</Link>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">{user.name || user.email}</h1>
+      <div className="surface p-4 text-sm space-y-1">
         <p>Email: {user.email}</p>
         {last && <p>Phone: {last.shippingPhone}</p>}
         {last && <p>Last address: {last.shippingAddress} ({last.shippingPincode})</p>}

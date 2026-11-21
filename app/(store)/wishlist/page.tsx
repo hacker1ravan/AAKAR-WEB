@@ -20,7 +20,7 @@ export default async function Wishlist() {
 
   return (
     <main className="max-w-6xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">My wishlist</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight mb-4">My wishlist</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {list.map((p) => <ProductCard key={p.id} p={p} />)}
       </div>

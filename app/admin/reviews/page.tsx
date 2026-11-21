@@ -17,8 +17,8 @@ export default function AdminReviews() {
     run(async () => { await api(`/api/admin/reviews/${id}`, "PUT", { status }); await load(); }, `Marked ${status}`);
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Reviews</h1>
+    <div className="p-4 md:p-6 space-y-4 max-w-6xl mx-auto">
+      <h1 className="font-serif text-3xl font-semibold tracking-tight">Reviews</h1>
       {msg && <p className="text-sm">{msg}</p>}
       <DataTable
         rows={rows}
@@ -31,9 +31,9 @@ export default function AdminReviews() {
         ]}
         actions={(r) => (
           <>
-            {r.status !== "approved" && <button className="underline" onClick={() => set(r.id, "approved")}>Approve</button>}
-            {r.status !== "rejected" && <button className="underline" onClick={() => set(r.id, "rejected")}>Reject</button>}
-            <button className="underline" onClick={() => {
+            {r.status !== "approved" && <button className="btn btn-link btn-sm" onClick={() => set(r.id, "approved")}>Approve</button>}
+            {r.status !== "rejected" && <button className="btn btn-link btn-sm" onClick={() => set(r.id, "rejected")}>Reject</button>}
+            <button className="btn btn-danger btn-sm" onClick={() => {
               if (confirm("Delete this review?"))
                 run(async () => { await api(`/api/admin/reviews/${r.id}`, "DELETE"); await load(); }, "Deleted");
             }}>Delete</button>

@@ -29,31 +29,36 @@ export default async function Dashboard() {
   ];
 
   return (
-    <div className="p-4 space-y-6 max-w-3xl mx-auto">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Link href="/admin/sales" className="underline text-sm">See sales charts</Link>
+    <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto">
+      <div className="flex flex-wrap justify-between items-end gap-3">
+        <div>
+          <p className="eyebrow">Overview</p>
+          <h1 className="font-serif text-3xl font-semibold tracking-tight">Dashboard</h1>
+        </div>
+        <Link href="/admin/sales" className="btn btn-outline btn-sm">See sales charts</Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {cards.map(([title, v]) => (
-          <div key={title} className="border rounded-lg p-3">
-            <p className="text-xs">{title}</p>
-            <p className="text-xl font-bold">{v}</p>
+          <div key={title} className="stat-card">
+            <p className="stat-label">{title}</p>
+            <p className="stat-value">{v}</p>
           </div>
         ))}
       </div>
-      <section>
-        <div className="flex justify-between mb-2">
-          <h2 className="font-semibold">Low stock ({t} or less)</h2>
-          <Link href="/admin/low-stock" className="underline text-sm">See all</Link>
+      <section className="surface p-4 md:p-5">
+        <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
+          <h2 className="font-serif text-lg font-semibold">Low stock <span className="text-[var(--muted)] font-sans text-sm font-normal">({t} or less)</span></h2>
+          <Link href="/admin/low-stock" className="btn btn-link btn-sm">See all</Link>
         </div>
-        {low.map((v) => (
-          <p key={v.id} className="text-sm">
-            {v.product.category} · {v.product.name} · {v.color} · {v.size}:{" "}
-            <b className={v.stock === 0 ? "text-red-600" : ""}>{v.stock === 0 ? "Out of stock" : v.stock}</b>
-          </p>
-        ))}
-        {!low.length && <p className="text-sm">All good.</p>}
+        <div className="divide-y divide-[var(--line)]">
+          {low.map((v) => (
+            <p key={v.id} className="text-sm py-1.5 flex flex-wrap justify-between gap-2">
+              <span className="text-[var(--ink-soft)]">{v.product.category} · {v.product.name} · {v.color} · {v.size}</span>
+              <b className={v.stock === 0 ? "text-red-600" : "text-[var(--ink)]"}>{v.stock === 0 ? "Out of stock" : v.stock}</b>
+            </p>
+          ))}
+        </div>
+        {!low.length && <p className="text-sm text-[var(--muted)]">All good — nothing running low.</p>}
       </section>
     </div>
   );
