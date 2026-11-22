@@ -141,7 +141,7 @@ export default function AdminNav({ lowStock }: { lowStock: number }) {
             </svg>
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto py-2 pb-8">{nav}</nav>
+        <nav className="admin-nav-mobile flex-1 overflow-y-auto py-2 pb-4">{nav}</nav>
       </aside>
     </>
   );

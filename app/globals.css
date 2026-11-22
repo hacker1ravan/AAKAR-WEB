@@ -252,4 +252,9 @@
     border-radius: 999px; font-size: .6875rem; font-weight: 700;
     background: #dc2626; color: #fff;
   }
+  /* Mobile admin drawer: tighter spacing so the whole grouped menu shows
+     with little or no scrolling. Scoped to the drawer; desktop sidebar unchanged. */
+  .admin-nav-mobile .admin-group-label { margin: .6rem 0 .2rem; }
+  .admin-nav-mobile > div:first-child .admin-group-label { margin-top: .15rem; }
+  .admin-nav-mobile .admin-nav-link { padding: .4rem .85rem; }
 }
