@@ -47,6 +47,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             // Keep the faint secondary surface a step off the chosen surface
             // colour, resolved here on <body> so it tracks the override.
             "--surface-2": "color-mix(in oklab, var(--surface) 96%, var(--ink))",
+            "--ink": s.textColor,
+            "--line": s.borderColor,
+            // Softer text + stronger border shades derived from the chosen
+            // text/border colours (resolved on <body> so they track overrides).
+            "--ink-soft": "color-mix(in oklab, var(--ink) 71%, var(--surface))",
+            "--muted": "color-mix(in oklab, var(--ink) 49%, var(--surface))",
+            "--line-strong": "color-mix(in oklab, var(--line) 93%, var(--ink))",
           } as CSSProperties
         }
       >

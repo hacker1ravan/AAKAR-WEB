@@ -224,6 +224,8 @@ model SiteSettings {
   accentColor        String   @default("#e11d48")
   backgroundColor    String   @default("#fdfcfa")
   surfaceColor       String   @default("#ffffff")
+  textColor          String   @default("#1c1917")
+  borderColor        String   @default("#ebe7e1")
   metaTitle          String   @default("")
   metaDescription    String   @default("")
   metaKeywords       String   @default("")
