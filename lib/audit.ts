@@ -21,10 +21,19 @@ export async function audit(a: { actor?: Actor; action: string; target?: string;
 }
 
 // A short, safe description of a request body: passwords and tokens are never written down.
+// Redaction walks nested objects and arrays, so a secret buried inside a sub-object is hidden too.
+function redact(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(redact);
+  if (v && typeof v === "object")
+    return Object.fromEntries(
+      Object.entries(v as Record<string, unknown>).map(([k, val]) =>
+        /pass|secret|token|code/i.test(k) ? [k, "[hidden]"] : [k, redact(val)]
+      )
+    );
+  return v;
+}
+
 export function summarize(body: unknown) {
   if (!body || typeof body !== "object") return "";
-  const clean = Object.fromEntries(
-    Object.entries(body as Record<string, unknown>).map(([k, v]) => [k, /pass|secret|token|code/i.test(k) ? "[hidden]" : v])
-  );
-  return JSON.stringify(clean).slice(0, 600);
+  return JSON.stringify(redact(body)).slice(0, 600);
 }

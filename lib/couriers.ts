@@ -17,7 +17,7 @@ export function parseCouriers(text: string): Courier[] {
 
 export function trackingLink(couriersText: string, courier: string, awb: string) {
   const c = parseCouriers(couriersText).find((x) => x.name.toLowerCase() === courier.trim().toLowerCase());
-  if (!c?.template || !awb.trim() || !/^https?:\/\//.test(c.template)) return "";
+  if (!c?.template || !awb.trim() || !/^https:\/\//.test(c.template)) return "";
   return c.template.replace(/\{awb\}/g, encodeURIComponent(awb.trim()));
 }
 

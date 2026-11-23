@@ -29,7 +29,17 @@ export async function POST(req: Request) {
     return fail(`The ${s.returnWindowDays}-day return window has passed`);
   if (order.returns.length) return fail("A return is already requested", 409);
 
-  const r = await prisma.returnRequest.create({ data: p.data });
+  // The read-then-create above can race (double submit / two tabs). The unique index on
+  // ReturnRequest.orderId makes the database reject the second write, which we surface here
+  // instead of letting a duplicate return (and a possible second full refund) slip through.
+  let r;
+  try {
+    r = await prisma.returnRequest.create({ data: p.data });
+  } catch (e: unknown) {
+    if (e && typeof e === "object" && (e as { code?: string }).code === "P2002")
+      return fail("A return is already requested", 409);
+    throw e;
+  }
   const ref = `#${order.id.slice(-8).toUpperCase()}`;
   await sendMail(order.user.email, `${s.siteName}: return request received`, [
     `We received your return request for order ${ref}.`,

@@ -135,7 +135,7 @@ model ReturnRequest {
   status    String   @default("requested")
   adminNote String   @default("")
   createdAt DateTime @default(now())
-  @@index([orderId])
+  @@unique([orderId]) // one return request per order; blocks the double-submit race (and double refunds)
   @@index([status])
 }
 
