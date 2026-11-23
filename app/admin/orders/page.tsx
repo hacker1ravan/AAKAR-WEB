@@ -127,6 +127,11 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
           {STATUSES.map((s) => <option key={s}>{s}</option>)}
         </select>
       </label>
+      {v.status === "cancelled" && order.status !== "cancelled" && order.paymentMethod !== "cod" && order.razorpayPaymentId && (
+        <p role="alert" className="rounded-md border border-amber-500 bg-amber-50 text-amber-800 text-sm p-3">
+          This order was paid online. Cancelling restores stock but does <strong>not</strong> refund the customer automatically — issue the {inr(order.total)} refund yourself in the Razorpay dashboard.
+        </p>
+      )}
       {v.status === "shipped" && (
         <>
           <label className="block text-sm">Courier
