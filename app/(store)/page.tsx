@@ -8,7 +8,12 @@ import { ButtonLink } from "@/components/ui/Button";
 
 export default async function Home() {
   const now = new Date();
-  const [s, banners, products, cats] = await Promise.all([
+  // Products in a switched-off category are not for sale, so keep them out of the home page too.
+  const allCats = await prisma.category.findMany({ orderBy: [{ position: "asc" }, { name: "asc" }] });
+  const cats = allCats.filter((c) => c.active);
+  const inactiveCatNames = allCats.filter((c) => !c.active).map((c) => c.name);
+
+  const [s, banners, products] = await Promise.all([
     getSettings(),
     prisma.banner.findMany({
       where: {
@@ -20,8 +25,12 @@ export default async function Home() {
       },
       orderBy: [{ position: "asc" }, { id: "desc" }],
     }),
-    prisma.product.findMany({ where: { active: true }, include: { variants: true }, orderBy: { createdAt: "desc" }, take: 8 }),
-    prisma.category.findMany({ where: { active: true }, orderBy: [{ position: "asc" }, { name: "asc" }] }),
+    prisma.product.findMany({
+      where: { active: true, ...(inactiveCatNames.length ? { NOT: { category: { in: inactiveCatNames } } } : {}) },
+      include: { variants: true },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+    }),
   ]);
 
   return (

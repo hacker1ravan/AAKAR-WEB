@@ -80,6 +80,11 @@ export async function priceCart(
   const cats = await db.category.findMany({
     where: { name: { in: [...new Set(variants.map((v) => v.product.category))] } },
   });
+  // A product in a switched-off category cannot be sold, like a hidden product.
+  const inactiveCat = new Set(cats.filter((c) => !c.active).map((c) => c.name));
+  const blockedByCat = lines.find((l) => inactiveCat.has(l.variant.product.category));
+  if (blockedByCat)
+    throw new UserError(`${blockedByCat.variant.product.name} is no longer available. Please refresh your cart.`);
   const catCod = new Map(cats.map((c) => [c.name, c.codAvailable]));
   const codBlocked = [
     ...new Set(

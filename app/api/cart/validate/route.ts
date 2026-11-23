@@ -20,14 +20,21 @@ export async function POST(req: Request) {
     select: {
       id: true, size: true, color: true,
       stock: true,
-      product: { select: { name: true, price: true, active: true, images: true } },
+      product: { select: { name: true, price: true, active: true, images: true, category: true } },
     },
   });
 
-  // Only live products are purchasable; a hidden product drops out of the cart.
+  // A product in a switched-off category cannot be sold, like a hidden product.
+  const cats = await prisma.category.findMany({
+    where: { name: { in: [...new Set(variants.map((v: any) => v.product.category))] } },
+    select: { name: true, active: true },
+  });
+  const inactiveCat = new Set(cats.filter((c: any) => !c.active).map((c: any) => c.name));
+
+  // Only live products are purchasable; a hidden product (or one in an off category) drops out of the cart.
   return ok({
     items: variants
-      .filter((v: any) => v.product.active)
+      .filter((v: any) => v.product.active && !inactiveCat.has(v.product.category))
       .map((v: any) => ({
         variantId: v.id,
         name: v.product.name,

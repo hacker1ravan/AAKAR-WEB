@@ -25,8 +25,14 @@ export default async function Products({ searchParams }: { searchParams: Promise
   const min = paise(sp.min);
   const max = paise(sp.max);
 
+  // Products in a switched-off category are not for sale, so keep them out of the listing too.
+  const cats = await prisma.category.findMany({ orderBy: [{ position: "asc" }, { name: "asc" }] });
+  const activeCats = cats.filter((c) => c.active);
+  const inactiveCatNames = cats.filter((c) => !c.active).map((c) => c.name);
+
   const where: Prisma.ProductWhereInput = {
     active: true,
+    ...(inactiveCatNames.length ? { NOT: { category: { in: inactiveCatNames } } } : {}),
     ...(sp.q ? { OR: [
       { name: { contains: sp.q, mode: "insensitive" as const } },
       { description: { contains: sp.q, mode: "insensitive" as const } },
@@ -47,10 +53,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const page = Math.min(Math.max(1, Math.floor(Number(sp.page)) || 1), pages);
 
-  const [products, cats] = await Promise.all([
-    prisma.product.findMany({ where, orderBy: [orderBy, { id: "asc" }], include: { variants: true }, skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE }),
-    prisma.category.findMany({ where: { active: true }, orderBy: [{ position: "asc" }, { name: "asc" }] }),
-  ]);
+  const products = await prisma.product.findMany({ where, orderBy: [orderBy, { id: "asc" }], include: { variants: true }, skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE });
 
   return (
     <main className="max-w-6xl mx-auto p-4">
@@ -58,7 +61,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
         <input name="q" defaultValue={sp.q} placeholder="Search" aria-label="Search" className={`${box} col-span-2`} />
         <select name="category" defaultValue={sp.category ?? ""} aria-label="Category" className={box}>
           <option value="">All categories</option>
-          {cats.map((c) => <option key={c.id}>{c.name}</option>)}
+          {activeCats.map((c) => <option key={c.id}>{c.name}</option>)}
         </select>
         <select name="size" defaultValue={sp.size ?? ""} aria-label="Size" className={box}>
           <option value="">Any size</option>

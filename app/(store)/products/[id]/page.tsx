@@ -49,6 +49,9 @@ export default async function ProductPage({ params }: P) {
     user ? prisma.review.findUnique({ where: { productId_userId: { productId: p.id, userId: user.id } } }) : null,
   ]);
 
+  // A product whose category has been switched off is not for sale.
+  if (cat && !cat.active) notFound();
+
   const codOk = s.codEnabled && p.codAvailable && cat?.codAvailable !== false;
   const avg = reviews.length ? reviews.reduce((n, r) => n + r.rating, 0) / reviews.length : 0;
 
