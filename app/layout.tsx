@@ -42,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             "--primary": s.primaryColor,
             "--secondary": s.secondaryColor,
             "--accent": s.accentColor,
+            "--bg": s.backgroundColor,
           } as CSSProperties
         }
       >

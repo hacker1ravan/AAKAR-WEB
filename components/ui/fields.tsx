@@ -33,11 +33,12 @@ export const CheckField = ({ label, value, onChange }: F<boolean>) => (
   </label>
 );
 
-export const ColorField = ({ label, value, onChange }: F<string>) => (
+export const ColorField = ({ label, value, onChange, hint }: F<string> & { hint?: string }) => (
   <label className="block text-sm">
     {label}
     <input type="color" className="block w-full h-10 mt-1" value={value}
       onChange={(e) => onChange(e.target.value)} />
+    {hint && <p className="text-xs">{hint}</p>}
   </label>
 );
 

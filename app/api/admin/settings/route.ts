@@ -17,6 +17,7 @@ const schema = z.object({
   primaryColor: hex,
   secondaryColor: hex,
   accentColor: hex,
+  backgroundColor: hex,
   metaTitle: z.string().max(70),
   metaDescription: z.string().max(160),
   metaKeywords: z.string(),

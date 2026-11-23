@@ -60,6 +60,7 @@ export default function SettingsPage() {
         <ColorField label="Primary colour" {...field("primaryColor")} />
         <ColorField label="Secondary colour" {...field("secondaryColor")} />
         <ColorField label="Accent colour" {...field("accentColor")} />
+        <ColorField label="Page background colour" hint="The background behind every page on the store and admin. Keep it light — text sits directly on it, so a dark colour can be hard to read." {...field("backgroundColor")} />
       </Section>
 
       <Section title="SEO">
