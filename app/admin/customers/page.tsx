@@ -9,33 +9,38 @@ import { fmtDate } from "@/lib/format";
 const d = (x: string | null) => (x ? fmtDate(x) : "-");
 
 export default function Customers() {
-  const [rows, setRows] = useState<any[] | null>(null);
+  const [data, setData] = useState<{ customers: any[]; total: number; page: number; pages: number } | null>(null);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("new");
-  useEffect(() => { api("/api/admin/customers").then(setRows); }, []);
-  if (!rows) return <p className="p-6">Loading...</p>;
+  const [page, setPage] = useState(1);
+  const [err, setErr] = useState("");
 
-  const term = q.toLowerCase();
-  const shown = rows
-    .filter((c) => !term || `${c.name} ${c.email} ${c.phone}`.toLowerCase().includes(term))
-    .sort((a, b) => (sort === "spent" ? b.spent - a.spent : sort === "orders" ? b.orders - a.orders : 0));
+  const load = (p = page, f = { q, sort }) => {
+    const params = new URLSearchParams({ page: String(p) });
+    if (f.q.trim()) params.set("q", f.q.trim());
+    if (f.sort !== "new") params.set("sort", f.sort);
+    return api(`/api/admin/customers?${params}`).then((dd) => { setData(dd); setPage(dd.page); setErr(""); }).catch((e) => setErr(e.message));
+  };
+  useEffect(() => { load(1, { q: "", sort: "new" }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight">Customers ({shown.length})</h1>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Customers{data ? ` (${data.total})` : ""}</h1>
         <a href="/api/admin/customers/export" className="btn btn-outline btn-sm">Download CSV</a>
       </div>
-      <div className="flex gap-2 text-sm">
+      <form className="flex gap-2 text-sm" onSubmit={(e) => { e.preventDefault(); load(1); }}>
         <input className="input flex-1" placeholder="Search name, email or phone" aria-label="Search customers" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className="input" aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}>
+        <select className="input" aria-label="Sort" value={sort} onChange={(e) => { setSort(e.target.value); load(1, { q, sort: e.target.value }); }}>
           <option value="new">Newest</option>
           <option value="spent">Top spenders</option>
           <option value="orders">Most orders</option>
         </select>
-      </div>
+        <button className="btn btn-dark btn-sm">Search</button>
+      </form>
+      {err && <p className="text-sm text-red-600">{err}</p>}
       <DataTable
-        rows={shown}
+        rows={data?.customers ?? []}
         cols={[
           { header: "Name", render: (c) => c.name || "-" },
           { header: "Email", render: (c) => c.email },
@@ -47,6 +52,14 @@ export default function Customers() {
         ]}
         actions={(c) => <Link href={`/admin/customers/${c.id}`} className="btn btn-link btn-sm">View</Link>}
       />
+
+      {data && data.pages > 1 && (
+        <div className="flex items-center gap-4 text-sm">
+          <button className="btn btn-outline btn-sm" disabled={page <= 1} onClick={() => load(page - 1)}>Previous</button>
+          <span className="text-[var(--ink-soft)]">Page {data.page} of {data.pages}</span>
+          <button className="btn btn-outline btn-sm" disabled={page >= data.pages} onClick={() => load(page + 1)}>Next</button>
+        </div>
+      )}
     </div>
   );
 }
