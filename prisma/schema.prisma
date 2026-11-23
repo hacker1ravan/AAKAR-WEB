@@ -223,6 +223,7 @@ model SiteSettings {
   secondaryColor     String   @default("#ffffff")
   accentColor        String   @default("#e11d48")
   backgroundColor    String   @default("#fdfcfa")
+  surfaceColor       String   @default("#ffffff")
   metaTitle          String   @default("")
   metaDescription    String   @default("")
   metaKeywords       String   @default("")

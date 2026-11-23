@@ -43,6 +43,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             "--secondary": s.secondaryColor,
             "--accent": s.accentColor,
             "--bg": s.backgroundColor,
+            "--surface": s.surfaceColor,
+            // Keep the faint secondary surface a step off the chosen surface
+            // colour, resolved here on <body> so it tracks the override.
+            "--surface-2": "color-mix(in oklab, var(--surface) 96%, var(--ink))",
           } as CSSProperties
         }
       >

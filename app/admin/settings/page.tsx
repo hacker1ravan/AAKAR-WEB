@@ -61,6 +61,7 @@ export default function SettingsPage() {
         <ColorField label="Secondary colour" {...field("secondaryColor")} />
         <ColorField label="Accent colour" {...field("accentColor")} />
         <ColorField label="Page background colour" hint="The background behind every page on the store and admin. Keep it light — text sits directly on it, so a dark colour can be hard to read." {...field("backgroundColor")} />
+        <ColorField label="Card / panel colour" hint="The fill of cards, panels and the header across the store and admin. Keep it light — dark text sits on it. Usually white or very close to it." {...field("surfaceColor")} />
       </Section>
 
       <Section title="SEO">
