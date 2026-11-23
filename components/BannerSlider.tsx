@@ -31,12 +31,14 @@ export default function BannerSlider({ banners }: { banners: B[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
     >
       <div className="relative aspect-[16/9] md:aspect-[16/5] bg-[var(--surface-2)]">
         {banners.map((b, idx) => (
           <div
             key={b.id}
             aria-hidden={idx !== i}
+            inert={idx !== i}
             className={`absolute inset-0 transition-opacity duration-500 ${idx === i ? "opacity-100" : "opacity-0 pointer-events-none"}`}
           >
             <Wrap href={b.linkUrl} className="block w-full h-full relative">

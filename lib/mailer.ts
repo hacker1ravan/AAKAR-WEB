@@ -40,10 +40,10 @@ export async function sendMail(
       <div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;border:1px solid #eee">
         ${s.logoUrl
           ? `<div style="padding:16px;border-bottom:1px solid #eee"><img src="${esc(cld(s.logoUrl, 400))}" alt="${esc(s.siteName)}" height="36" style="display:block;height:36px;width:auto"></div>`
-          : `<div style="background:${s.primaryColor};color:${s.secondaryColor};padding:16px;font-size:18px">${esc(s.siteName)}</div>`}
+          : `<div style="background:${esc(s.primaryColor)};color:${esc(s.secondaryColor)};padding:16px;font-size:18px">${esc(s.siteName)}</div>`}
         <div style="padding:16px;line-height:1.6">
           ${lines.map((l) => `<p>${esc(l)}</p>`).join("")}
-          ${button ? `<p><a href="${esc(button.url)}" style="background:${s.primaryColor};color:${s.secondaryColor};padding:10px 16px;text-decoration:none;border-radius:4px">${esc(button.text)}</a></p>` : ""}
+          ${button ? `<p><a href="${esc(button.url)}" style="background:${esc(s.primaryColor)};color:${esc(s.secondaryColor)};padding:10px 16px;text-decoration:none;border-radius:4px">${esc(button.text)}</a></p>` : ""}
         </div>
       </div>`;
     await transporter.sendMail({ from: `"${s.siteName.replace(/["\r\n]/g, "")}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`, to, subject, html, attachments });
