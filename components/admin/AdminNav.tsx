@@ -87,14 +87,14 @@ export default function AdminNav({ lowStock }: { lowStock: number }) {
       {/* Desktop sidebar (lg and up) — unchanged sticky grid column. */}
       <aside className="admin-sidebar hidden lg:block print:hidden">
         <div className="flex items-center justify-between gap-2 px-4 py-4 border-b border-[var(--line)]">
-          <Link href="/admin" className="font-serif text-lg font-semibold tracking-tight">Admin</Link>
+          <Link href="/admin" className="admin-wordmark font-serif text-lg font-semibold tracking-tight">Admin</Link>
           <Link href="/" className="btn btn-outline btn-sm">View store</Link>
         </div>
         <nav className="py-2 lg:pb-8">{nav}</nav>
       </aside>
 
       {/* Mobile top bar (below lg) — hamburger opens the drawer. */}
-      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-[var(--line)] bg-[var(--surface)] px-4 py-3 print:hidden">
+      <div className="admin-topbar lg:hidden sticky top-0 z-30 flex items-center justify-between gap-2 px-4 py-3 print:hidden">
         <button
           type="button"
           aria-label="Open admin menu"
@@ -129,7 +129,7 @@ export default function AdminNav({ lowStock }: { lowStock: number }) {
         }`}
       >
         <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] px-4 py-3.5">
-          <Link href="/admin" className="font-serif text-lg font-semibold tracking-tight">Admin</Link>
+          <Link href="/admin" className="admin-wordmark font-serif text-lg font-semibold tracking-tight">Admin</Link>
           <button
             type="button"
             aria-label="Close admin menu"

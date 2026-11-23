@@ -224,27 +224,42 @@
     .admin-shell { display: grid; grid-template-columns: 15rem 1fr; }
   }
   .admin-sidebar {
-    background: var(--surface); border-right: 1px solid var(--line);
+    background:
+      linear-gradient(180deg,
+        color-mix(in oklab, var(--accent) 11%, var(--surface)) 0,
+        var(--surface) 170px);
+    border-right: 1px solid color-mix(in oklab, var(--accent) 22%, var(--line));
   }
   @media (min-width: 1024px) {
     .admin-sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; }
   }
   .admin-main { min-width: 0; }
+  /* Brand wordmark + branded mobile top bar (pick up the store's accent). */
+  .admin-wordmark { color: var(--accent); }
+  .admin-topbar {
+    background: color-mix(in oklab, var(--accent) 9%, var(--surface));
+    border-bottom: 1px solid color-mix(in oklab, var(--accent) 22%, var(--line));
+  }
   .admin-group-label {
     font-size: .625rem; font-weight: 700; letter-spacing: .16em;
-    text-transform: uppercase; color: var(--muted);
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--accent) 60%, var(--muted));
     padding: 0 .85rem; margin: 1.1rem 0 .4rem;
   }
   .admin-nav-link {
     display: flex; align-items: center; gap: .5rem;
     padding: .5rem .85rem; margin: 0 .5rem; border-radius: var(--radius-sm);
     font-size: .875rem; color: var(--ink-soft); white-space: nowrap;
-    transition: background-color .15s ease, color .15s ease;
+    transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
   }
-  .admin-nav-link:hover { background: var(--surface-2); color: var(--ink); }
+  .admin-nav-link:hover {
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+    color: var(--ink);
+  }
   .admin-nav-link[data-active="true"] {
-    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    background: color-mix(in oklab, var(--accent) 18%, transparent);
     color: var(--ink); font-weight: 600;
+    box-shadow: inset 3px 0 0 var(--accent);
   }
   .admin-count-badge {
     margin-left: auto; display: inline-grid; place-items: center;
