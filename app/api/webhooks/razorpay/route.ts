@@ -4,9 +4,13 @@ import { markOrderPaid } from "@/lib/orders";
 // backup confirmation: still works if the customer pays and closes the tab
 export async function POST(req: Request) {
   const raw = await req.text();
+  // Refuse rather than validate against an empty-key HMAC if the webhook secret is missing.
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret) return new Response("Webhook not configured", { status: 500 });
+
   const sig = Buffer.from(req.headers.get("x-razorpay-signature") ?? "");
   const expected = Buffer.from(
-    crypto.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET ?? "").update(raw).digest("hex")
+    crypto.createHmac("sha256", secret).update(raw).digest("hex")
   );
   if (sig.length !== expected.length || !crypto.timingSafeEqual(sig, expected))
     return new Response("Bad signature", { status: 400 });

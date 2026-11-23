@@ -14,9 +14,13 @@ export async function POST(req: Request) {
   )
     return NextResponse.json({ error: "Invalid payment details" }, { status: 400 });
 
+  // Refuse rather than validate against an empty-key HMAC if the secret is missing.
+  const secret = process.env.RAZORPAY_KEY_SECRET;
+  if (!secret) return NextResponse.json({ error: "Payments are not configured" }, { status: 500 });
+
   const expected = Buffer.from(
     crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET ?? "")
+      .createHmac("sha256", secret)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex")
   );
