@@ -24,7 +24,7 @@ export function DataTable<T extends { id: string }>({
             </tr>
           ))}
           {!rows.length && (
-            <tr><td className="p-6 text-center text-[var(--muted)]" colSpan={cols.length + (actions ? 1 : 0)}>Nothing here yet</td></tr>
+            <tr><td className="p-6 text-center text-[var(--ink-soft)]" colSpan={cols.length + (actions ? 1 : 0)}>Nothing here yet</td></tr>
           )}
         </tbody>
       </table>

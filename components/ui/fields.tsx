@@ -4,6 +4,11 @@ import { cld } from "@/lib/img";
 
 type F<V> = { label: string; value: V; onChange: (v: V) => void };
 const input = "input mt-1";
+// Shared label + helper-text styling so every field reads as one system.
+// `--ink-soft` (not `--muted`) keeps hint text above the 4.5:1 contrast floor.
+const labelText = "block text-sm font-medium text-[var(--ink)]";
+const hintText = "mt-1 text-xs text-[var(--ink-soft)]";
+const reqMark = <span className="text-[var(--danger)]"> *</span>;
 
 export const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="surface p-4 space-y-3">
@@ -15,10 +20,11 @@ export const Section = ({ title, children }: { title: string; children: React.Re
 export const TextField = ({
   label, value, onChange, required, type = "text", rows,
 }: F<string> & { required?: boolean; type?: string; rows?: number }) => (
-  <label className="block text-sm">
-    {label}{required && " *"}
+  <label className={labelText}>
+    {label}{required && reqMark}
     {rows ? (
-      <textarea className={input} rows={rows} value={value} onChange={(e) => onChange(e.target.value)} />
+      <textarea className={input} rows={rows} value={value} required={required}
+        onChange={(e) => onChange(e.target.value)} />
     ) : (
       <input className={input} type={type} value={value} required={required}
         onChange={(e) => onChange(e.target.value)} />
@@ -27,18 +33,22 @@ export const TextField = ({
 );
 
 export const CheckField = ({ label, value, onChange }: F<boolean>) => (
-  <label className="flex items-center gap-2 text-sm">
-    <input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} />
+  <label className="flex items-center gap-2.5 py-1 text-sm font-medium text-[var(--ink)] cursor-pointer select-none">
+    <input type="checkbox" className="h-4 w-4" checked={value} onChange={(e) => onChange(e.target.checked)} />
     {label}
   </label>
 );
 
 export const ColorField = ({ label, value, onChange, hint }: F<string> & { hint?: string }) => (
-  <label className="block text-sm">
+  <label className={labelText}>
     {label}
-    <input type="color" className="block w-full h-10 mt-1" value={value}
-      onChange={(e) => onChange(e.target.value)} />
-    {hint && <p className="text-xs">{hint}</p>}
+    <span className="mt-1 flex items-center gap-2.5">
+      <input type="color"
+        className="h-9 w-12 shrink-0 cursor-pointer rounded-[var(--radius-sm)] border border-[var(--line-strong)] bg-[var(--surface)] p-0.5"
+        value={value} onChange={(e) => onChange(e.target.value)} />
+      <span className="font-mono text-xs uppercase tracking-wide text-[var(--ink-soft)]">{value}</span>
+    </span>
+    {hint && <p className={hintText}>{hint}</p>}
   </label>
 );
 
@@ -55,8 +65,8 @@ export const ImageField = ({ label, value, onChange, hint }: F<string> & { hint?
   const [busy, setBusy] = useState(false);
   return (
     <div className="text-sm">
-      {label}
-      {hint && <p className="text-xs">{hint}</p>}
+      <span className={labelText}>{label}</span>
+      {hint && <p className={hintText}>{hint}</p>}
       {value && (
         <div className="flex items-center gap-3 my-2">
           <img src={cld(value, 200)} alt="" className="h-14 max-w-40 object-contain border border-[var(--line)] bg-[var(--surface-2)] rounded-[var(--radius-sm)] p-1" />
@@ -72,14 +82,14 @@ export const ImageField = ({ label, value, onChange, hint }: F<string> & { hint?
           setBusy(false);
           e.target.value = "";
         }} />
-      {busy && <p className="text-xs">Uploading...</p>}
+      {busy && <p className="mt-1 text-xs text-[var(--ink-soft)]">Uploading…</p>}
     </div>
   );
 };
 
 export const ImagesField = ({ label, value, onChange }: F<string[]>) => (
   <div className="text-sm">
-    {label}
+    <span className={labelText}>{label}</span>
     <div className="flex gap-2 flex-wrap my-2">
       {value.map((u) => (
         <div key={u} className="relative">
@@ -97,6 +107,27 @@ export const ImagesField = ({ label, value, onChange }: F<string[]>) => (
       }} />
   </div>
 );
+
+/**
+ * Shared status/feedback line for forms. Renders nothing when empty; otherwise
+ * announces to assistive tech (role=alert on error, role=status on success/info)
+ * and colours itself from semantic tokens so success and error are distinguishable.
+ */
+export const FormMessage = ({
+  msg, status = "",
+}: { msg: string; status?: "" | "ok" | "error" }) => {
+  if (!msg) return null;
+  const err = status === "error";
+  return (
+    <p
+      role={err ? "alert" : "status"}
+      aria-live={err ? "assertive" : "polite"}
+      className={"text-sm" + (err ? " text-[var(--danger)]" : status === "ok" ? " text-[var(--ok)]" : "")}
+    >
+      {msg}
+    </p>
+  );
+};
 
 export const SubmitButton = ({ loading, children }: { loading: boolean; children: React.ReactNode }) => (
   <button disabled={loading} className="btn btn-dark btn-block">

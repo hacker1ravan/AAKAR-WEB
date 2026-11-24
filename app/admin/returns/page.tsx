@@ -1,9 +1,11 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/fetcher";
 import { useAction } from "@/lib/hooks";
 import { inr } from "@/lib/format";
 import { DataTable } from "@/components/admin/DataTable";
+import StatusBadge from "@/components/admin/StatusBadge";
 
 const STATUSES = ["requested", "approved", "rejected", "received", "refunded"];
 
@@ -12,7 +14,7 @@ export default function AdminReturns() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [err, setErr] = useState("");
-  const { run, msg } = useAction();
+  const { run, msg, status: actionStatus } = useAction();
 
   const load = (p = page, s = status) => {
     const params = new URLSearchParams({ page: String(p) });
@@ -46,7 +48,7 @@ export default function AdminReturns() {
           {STATUSES.map((s) => <option key={s}>{s}</option>)}
         </select>
       </div>
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={actionStatus} />
       {err && <p className="text-sm text-red-600">{err}</p>}
       <DataTable
         rows={data?.returns ?? []}
@@ -54,7 +56,7 @@ export default function AdminReturns() {
           { header: "Order", render: (r) => "#" + r.order.id.slice(-8).toUpperCase() },
           { header: "Customer", render: (r) => r.order.user.name || r.order.user.email },
           { header: "Reason", render: (r) => r.reason + (r.details ? ` - ${r.details}` : "") },
-          { header: "Status", render: (r) => r.status },
+          { header: "Status", render: (r) => <StatusBadge status={r.status} /> },
         ]}
         actions={(r) => (
           <>

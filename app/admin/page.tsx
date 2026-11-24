@@ -54,11 +54,11 @@ export default async function Dashboard() {
           {low.map((v) => (
             <p key={v.id} className="text-sm py-1.5 flex flex-wrap justify-between gap-2">
               <span className="text-[var(--ink-soft)]">{v.product.category} · {v.product.name} · {v.color} · {v.size}</span>
-              <b className={v.stock === 0 ? "text-red-600" : "text-[var(--ink)]"}>{v.stock === 0 ? "Out of stock" : v.stock}</b>
+              <b className={v.stock === 0 ? "text-[var(--danger)]" : "text-[var(--ink)]"}>{v.stock === 0 ? "Out of stock" : v.stock}</b>
             </p>
           ))}
         </div>
-        {!low.length && <p className="text-sm text-[var(--muted)]">All good — nothing running low.</p>}
+        {!low.length && <p className="text-sm text-[var(--ink-soft)]">All good — nothing running low.</p>}
       </section>
     </div>
   );

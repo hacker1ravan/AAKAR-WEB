@@ -2,21 +2,21 @@
 import { signOut } from "next-auth/react";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField } from "@/components/ui/fields";
+import { FormMessage, Section, TextField } from "@/components/ui/fields";
 
 export default function PrivacyForm() {
   const { values, field } = useForm({ password: "", confirm: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   return (
     <Section title="Your data">
-      <p className="text-sm">
+      <p className="text-sm text-[var(--ink-soft)]">
         Download a copy of everything we hold about you: your details, addresses, orders, reviews and wishlist.
       </p>
       <a href="/api/account/export" className="btn btn-outline btn-sm">Download my data</a>
 
       <form
-        className="space-y-3 border-t pt-3"
+        className="space-y-3 border-t border-[var(--line)] pt-4"
         onSubmit={(e) => {
           e.preventDefault();
           if (!confirm("Delete your account? This cannot be undone.")) return;
@@ -26,15 +26,15 @@ export default function PrivacyForm() {
           }, "");
         }}
       >
-        <h3 className="font-medium text-sm">Delete my account</h3>
-        <p className="text-xs">
+        <h3 className="font-medium text-sm text-[var(--ink)]">Delete my account</h3>
+        <p className="text-xs text-[var(--ink-soft)]">
           This removes your name, email, addresses, wishlist and reviews. We keep the order records (amounts, items,
           invoice numbers) without your name, phone and address, because shops must keep sales and tax records.
           You cannot delete the account while an order or return is still in progress.
         </p>
         <TextField label="Your password" type="password" required {...field("password")} />
         <TextField label="Type DELETE to confirm" required {...field("confirm")} />
-        {msg && <p className="text-sm text-red-600">{msg}</p>}
+        <FormMessage msg={msg} status={status} />
         <button disabled={loading || values.confirm !== "DELETE"} className="btn btn-danger btn-sm">
           {loading ? "Please wait..." : "Delete my account"}
         </button>

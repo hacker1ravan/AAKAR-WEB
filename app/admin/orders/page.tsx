@@ -4,8 +4,9 @@ import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
 import { inr } from "@/lib/format";
 import { DataTable } from "@/components/admin/DataTable";
+import StatusBadge from "@/components/admin/StatusBadge";
 import ExportOrders from "@/components/admin/ExportOrders";
-import { TextField, CheckField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
 import { fmtDate } from "@/lib/format";
 
 const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled"];
@@ -48,7 +49,7 @@ export default function AdminOrders() {
         </select>
         <button className="btn btn-dark btn-sm">Search</button>
       </form>
-      {err && <p className="text-sm text-red-600">{err}</p>}
+      {err && <p className="text-sm text-[var(--danger)]">{err}</p>}
 
       <DataTable
         rows={data?.orders ?? []}
@@ -57,7 +58,7 @@ export default function AdminOrders() {
           { header: "Customer", render: (o) => (o.shippingName || o.user.name || o.user.email) + (o.user.role === "guest" ? " (guest)" : "") },
           { header: "Total", render: (o) => inr(o.total) },
           { header: "Payment", render: (o) => (o.paymentMethod === "cod" ? "COD" : "Online") },
-          { header: "Status", render: (o) => o.status },
+          { header: "Status", render: (o) => <StatusBadge status={o.status} /> },
           { header: "Date", render: (o) => fmtDate(o.createdAt) },
         ]}
         actions={(o) => (
@@ -94,7 +95,7 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
     trackingUrl: order.trackingUrl as string,
     notify: true,
   });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   const st = field("status");
   const [custom, setCustom] = useState(!!order.courier && !couriers.includes(order.courier));
 
@@ -152,7 +153,7 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
       )}
       <TextField label="Note to customer (optional)" {...field("note")} />
       <CheckField label="Email the customer" {...field("notify")} />
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Update order</SubmitButton>
       <button type="button" className="btn btn-link btn-sm" onClick={onDone}>Close</button>
     </form>

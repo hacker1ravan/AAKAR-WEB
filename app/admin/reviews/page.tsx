@@ -1,8 +1,10 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/fetcher";
 import { useAction } from "@/lib/hooks";
 import { DataTable } from "@/components/admin/DataTable";
+import StatusBadge from "@/components/admin/StatusBadge";
 
 const STATUSES = ["pending", "approved", "rejected"];
 
@@ -11,7 +13,7 @@ export default function AdminReviews() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [err, setErr] = useState("");
-  const { run, msg } = useAction();
+  const { run, msg, status: actionStatus } = useAction();
 
   const load = (p = page, s = status) => {
     const params = new URLSearchParams({ page: String(p) });
@@ -32,7 +34,7 @@ export default function AdminReviews() {
           {STATUSES.map((s) => <option key={s}>{s}</option>)}
         </select>
       </div>
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={actionStatus} />
       {err && <p className="text-sm text-red-600">{err}</p>}
       <DataTable
         rows={data?.reviews ?? []}
@@ -41,7 +43,7 @@ export default function AdminReviews() {
           { header: "Customer", render: (r) => r.userName },
           { header: "Rating", render: (r) => "★".repeat(r.rating) },
           { header: "Review", render: (r) => r.comment },
-          { header: "Status", render: (r) => r.status },
+          { header: "Status", render: (r) => <StatusBadge status={r.status} /> },
         ]}
         actions={(r) => (
           <>

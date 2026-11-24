@@ -4,17 +4,17 @@ export function BarChart({ data, format }: { data: Point[]; format: (n: number) 
   const max = Math.max(...data.map((d) => d.value), 1);
   return (
     <div>
-      <div className="flex items-end gap-px h-40 border-b">
+      <div className="flex items-end gap-px h-40 border-b border-[var(--line)]">
         {data.map((d) => (
           <div
             key={d.label}
             title={`${d.label}: ${format(d.value)}`}
-            className="flex-1 bg-[var(--primary)] rounded-t min-h-[2px]"
+            className="flex-1 bg-[var(--primary)] rounded-t min-h-[2px] transition-colors hover:bg-[var(--accent)]"
             style={{ height: `${(d.value / max) * 100}%` }}
           />
         ))}
       </div>
-      <div className="flex justify-between text-xs mt-1">
+      <div className="flex justify-between text-xs mt-1 text-[var(--ink-soft)]">
         <span>{data[0]?.label}</span>
         <span>{data[data.length - 1]?.label}</span>
       </div>
@@ -24,7 +24,7 @@ export function BarChart({ data, format }: { data: Point[]; format: (n: number) 
 
 export function HBars({ rows, format }: { rows: Point[]; format: (n: number) => string }) {
   const max = Math.max(...rows.map((r) => r.value), 1);
-  if (!rows.length) return <p className="text-sm">No sales in this period.</p>;
+  if (!rows.length) return <p className="text-sm text-[var(--ink-soft)]">No sales in this period.</p>;
   return (
     <div className="space-y-2">
       {rows.map((r) => (
