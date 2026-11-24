@@ -16,7 +16,7 @@ export default function CartPage() {
       </main>
     );
 
-  const qtyBtn = "grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] border border-[var(--line-strong)] text-[var(--ink)] hover:bg-[var(--surface-2)] disabled:opacity-40";
+  const qtyBtn = "grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-[var(--line-strong)] text-[var(--ink)] hover:bg-[var(--surface-2)] disabled:opacity-40";
 
   return (
     <main className="max-w-2xl mx-auto p-4 space-y-3">
