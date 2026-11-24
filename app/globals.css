@@ -14,7 +14,7 @@
   /* neutral ink & surfaces (warm, boutique) */
   --ink: #1c1917;
   --ink-soft: #57534e;
-  --muted: #8b857e;
+  --muted: #72706e;
   --line: #ebe7e1;
   --line-strong: #ddd8d0;
   --surface: #ffffff;
@@ -180,6 +180,7 @@
   /* Category / filter chip ---------------------------------------- */
   .chip {
     display: inline-flex; align-items: center; white-space: nowrap;
+    min-height: 2.5rem; /* 40px tap target for the mobile category bar */
     font-size: .8125rem; font-weight: 500; color: var(--ink-soft);
     padding: .4rem .85rem; border-radius: 999px; border: 1px solid var(--line);
     background: var(--surface); transition: all .18s ease;
