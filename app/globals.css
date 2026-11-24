@@ -100,6 +100,18 @@
 @layer components {
   .container-x { max-width: 72rem; margin-inline: auto; padding-inline: 1rem; }
 
+  /* Skip-to-content link: kept in the tab order but off-screen until focused,
+     so keyboard users can jump past the header + category nav. */
+  .skip-link {
+    position: fixed; top: .5rem; left: .5rem; z-index: 100;
+    transform: translateY(-150%);
+    background: var(--ink); color: #fff;
+    padding: .6rem 1rem; border-radius: var(--radius-sm);
+    font-size: .875rem; font-weight: 500; box-shadow: var(--shadow-md);
+    transition: transform .18s ease;
+  }
+  .skip-link:focus { transform: translateY(0); }
+
   /* Buttons -------------------------------------------------------- */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
