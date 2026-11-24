@@ -19,7 +19,7 @@ export default function AddToCart({ product }: Props) {
 
   return (
     <div className="space-y-4">
-      <div>
+      <div role="group" aria-label="Colour">
         <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Colour: <span className="font-medium text-[var(--ink)]">{color}</span></p>
         <div className="flex gap-2 flex-wrap">
           {colors.map((c) => (
@@ -28,7 +28,7 @@ export default function AddToCart({ product }: Props) {
           ))}
         </div>
       </div>
-      <div>
+      <div role="group" aria-label="Size">
         <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Size</p>
         <div className="flex gap-2 flex-wrap">
           {options.map((v) => (
@@ -55,7 +55,9 @@ export default function AddToCart({ product }: Props) {
       >
         {variant ? "Add to cart" : "Select a size"}
       </Button>
-      {added && <p className="text-sm">Added! <Link href="/cart" className="link-underline">View cart</Link></p>}
+      <p className="text-sm" role="status" aria-live="polite">
+        {added && <>Added! <Link href="/cart" className="link-underline">View cart</Link></>}
+      </p>
     </div>
   );
 }

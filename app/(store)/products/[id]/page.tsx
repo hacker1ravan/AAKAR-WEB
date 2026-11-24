@@ -11,7 +11,7 @@ import SizeChart from "@/components/SizeChart";
 import ProductCard from "@/components/ProductCard";
 import HeartButton from "@/components/HeartButton";
 import Reviews from "@/components/Reviews";
-import Photo from "@/components/Photo";
+import ProductGallery from "@/components/ProductGallery";
 
 type P = { params: Promise<{ id: string }> };
 
@@ -79,11 +79,7 @@ export default async function ProductPage({ params }: P) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <main className="container-x grid gap-8 py-8 md:grid-cols-2 md:gap-12">
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto md:grid md:grid-cols-1 md:gap-4 md:overflow-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {p.images.map((u, idx) => (
-            <Photo key={u} src={u} alt={p.name} width={900} priority={idx === 0} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[3/4] w-full shrink-0 basis-full snap-center rounded-[var(--radius-lg)] object-cover ring-1 ring-[var(--line)]" />
-          ))}
-        </div>
+        <ProductGallery images={p.images} alt={p.name} />
         <div className="space-y-5 md:sticky md:top-24 md:self-start">
           <p className="eyebrow">{p.category}</p>
           <div className="flex items-start justify-between gap-3">

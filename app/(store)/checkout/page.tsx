@@ -33,6 +33,7 @@ export default function Checkout() {
   const [codeInput, setCodeInput] = useState("");
   const [coupon, setCoupon] = useState("");
   const [couponMsg, setCouponMsg] = useState("");
+  const [couponStatus, setCouponStatus] = useState<"" | "ok" | "error">("");
   const [choice, setChoice] = useState<"online" | "cod">("online");
   const [quote, setQuote] = useState<any>(null);
 
@@ -68,15 +69,15 @@ export default function Checkout() {
       .then((q) => {
         if (!live) return;
         setQuote(q);
-        if (coupon && q.couponError) { setCouponMsg(q.couponError); setCoupon(""); }
-        else if (coupon) setCouponMsg(`Coupon ${q.couponCode} applied`);
+        if (coupon && q.couponError) { setCouponMsg(q.couponError); setCouponStatus("error"); setCoupon(""); }
+        else if (coupon) { setCouponMsg(`Coupon ${q.couponCode} applied`); setCouponStatus("ok"); }
       })
-      .catch((e) => live && setCouponMsg(e.message));
+      .catch((e) => { if (live) { setCouponMsg(e.message); setCouponStatus("error"); } });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, status, itemsKey, coupon, pin, choice]);
 
-  if (!ready || status === "loading") return <p className="p-6">Loading...</p>;
+  if (!ready || status === "loading") return <p className="p-6" role="status" aria-live="polite">Loading...</p>;
   if (!items.length) return <main className="p-6 text-center"><p>Your cart is empty.</p></main>;
 
   const blocked = !!pin && !!quote && !quote.deliverable;
@@ -163,17 +164,18 @@ export default function Checkout() {
       </div>
 
       <div className="space-y-1">
+        <label htmlFor="coupon-code" className="block text-sm font-medium text-[var(--ink)]">Coupon code</label>
         <div className="flex gap-2">
-          <input className="input flex-1 text-sm uppercase" placeholder="Coupon code" aria-label="Coupon code"
+          <input id="coupon-code" className="input flex-1 text-sm uppercase"
             value={codeInput} onChange={(e) => setCodeInput(e.target.value)} />
           <button type="button" className="btn btn-outline btn-sm"
-            onClick={() => { setCouponMsg(""); setCoupon(codeInput.trim().toUpperCase()); }}>Apply</button>
+            onClick={() => { setCouponMsg(""); setCouponStatus(""); setCoupon(codeInput.trim().toUpperCase()); }}>Apply</button>
           {coupon && (
             <button type="button" className="btn btn-link btn-sm"
-              onClick={() => { setCoupon(""); setCodeInput(""); setCouponMsg(""); }}>Remove</button>
+              onClick={() => { setCoupon(""); setCodeInput(""); setCouponMsg(""); setCouponStatus(""); }}>Remove</button>
           )}
         </div>
-        {couponMsg && <p className="text-xs text-[var(--ink-soft)]">{couponMsg}</p>}
+        <FormMessage msg={couponMsg} status={couponStatus} />
       </div>
 
       <form onSubmit={pay} className="space-y-4">
