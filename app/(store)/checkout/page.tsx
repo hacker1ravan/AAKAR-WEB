@@ -76,7 +76,7 @@ export default function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, status, itemsKey, coupon, pin, choice]);
 
-  if (!ready || status === "loading") return <p className="p-6">Loading...</p>;
+  if (!ready || status === "loading") return <p className="p-6" role="status" aria-live="polite">Loading...</p>;
   if (!items.length) return <main className="p-6 text-center"><p>Your cart is empty.</p></main>;
 
   const blocked = !!pin && !!quote && !quote.deliverable;

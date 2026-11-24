@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/ui/Button";
 
 export default function CartPage() {
   const { items, setQty, remove, total, ready } = useCart();
-  if (!ready) return <p className="p-6">Loading...</p>;
+  if (!ready) return <p className="p-6" role="status" aria-live="polite">Loading...</p>;
   if (!items.length)
     return (
       <main className="p-6 text-center space-y-3">
