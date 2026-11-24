@@ -23,7 +23,7 @@ export default function AddToCart({ product }: Props) {
         <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Colour: <span className="font-medium text-[var(--ink)]">{color}</span></p>
         <div className="flex gap-2 flex-wrap">
           {colors.map((c) => (
-            <button key={c} type="button" className="chip" data-active={c === color}
+            <button key={c} type="button" className="chip" data-active={c === color} aria-pressed={c === color}
               onClick={() => { setColor(c); setSize(""); setAdded(false); }}>{c}</button>
           ))}
         </div>
@@ -32,12 +32,12 @@ export default function AddToCart({ product }: Props) {
         <p className="text-sm mb-1.5 text-[var(--ink-soft)]">Size</p>
         <div className="flex gap-2 flex-wrap">
           {options.map((v) => (
-            <button key={v.id} type="button" disabled={v.stock < 1} data-active={v.size === size}
+            <button key={v.id} type="button" disabled={v.stock < 1} data-active={v.size === size} aria-pressed={v.size === size}
               className={`chip ${v.stock < 1 ? "opacity-40 line-through cursor-not-allowed" : ""}`}
               onClick={() => { setSize(v.size); setAdded(false); }}>{v.size}</button>
           ))}
         </div>
-        {variant && variant.stock <= 5 && <p className="text-xs text-red-600 mt-1.5">Only {variant.stock} left</p>}
+        {variant && variant.stock <= 5 && <p className="mt-1.5 text-xs font-medium text-[var(--danger)]">Only {variant.stock} left</p>}
       </div>
       <Button
         variant="dark"

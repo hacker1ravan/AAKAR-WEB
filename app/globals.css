@@ -35,6 +35,10 @@
   --accent: #b08968;
   --primary: #1c1917;
   --secondary: #ffffff;
+
+  /* semantic feedback (form messages) */
+  --danger: #dc2626;
+  --ok: #15803d;
 }
 
 @layer base {
@@ -64,6 +68,25 @@
   img { max-width: 100%; }
 
   ::selection { background: color-mix(in oklab, var(--accent) 22%, transparent); }
+
+  /* Native form controls pick up the store's brand accent instead of the
+     browser's default blue, so checkboxes/radios/range/progress stay on-brand.
+     Purely cosmetic — no change to behavior. */
+  input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); cursor: pointer; }
+
+  /* Style the raw file-picker button to match the .btn-outline system, so
+     admin upload fields stop showing the unstyled browser default. */
+  input[type="file"] { font-size: .875rem; color: var(--ink-soft); max-width: 100%; }
+  input[type="file"]::file-selector-button {
+    margin-right: .75rem; padding: .45rem .9rem;
+    border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+    font-weight: 500; font-size: .8125rem; cursor: pointer;
+    transition: background-color .18s ease, border-color .18s ease;
+  }
+  input[type="file"]::file-selector-button:hover {
+    background: var(--surface-2); border-color: var(--muted);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

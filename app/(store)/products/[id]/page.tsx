@@ -79,12 +79,12 @@ export default async function ProductPage({ params }: P) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <main className="container-x grid gap-8 py-8 md:grid-cols-2 md:gap-12">
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto md:grid md:grid-cols-1 md:gap-4 md:overflow-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {p.images.map((u, idx) => (
-            <Photo key={u} src={u} alt={p.name} width={900} priority={idx === 0} sizes="(min-width: 768px) 50vw, 100vw" className="w-full shrink-0 snap-center rounded-[var(--radius-lg)] object-cover ring-1 ring-[var(--line)]" />
+            <Photo key={u} src={u} alt={p.name} width={900} priority={idx === 0} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[3/4] w-full shrink-0 basis-full snap-center rounded-[var(--radius-lg)] object-cover ring-1 ring-[var(--line)]" />
           ))}
         </div>
-        <div className="space-y-5">
+        <div className="space-y-5 md:sticky md:top-24 md:self-start">
           <p className="eyebrow">{p.category}</p>
           <div className="flex items-start justify-between gap-3">
             <h1 className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">{p.name}</h1>
@@ -104,14 +104,17 @@ export default async function ProductPage({ params }: P) {
           />
           <PincodeCheck />
           {s.codEnabled && (
-            <p className="text-xs">
+            <p className="text-xs text-[var(--ink-soft)]">
               {codOk ? "Cash on Delivery available (pincode permitting)" : "Cash on Delivery not available for this item"}
             </p>
           )}
           <SizeChart text={cat?.sizeChart ?? ""} />
-          <div className="border-t border-[var(--line)] pt-5">
-            <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-soft)]">{p.description}</p>
-          </div>
+          {p.description.trim() && (
+            <div className="border-t border-[var(--line)] pt-5">
+              <p className="eyebrow mb-2">Details</p>
+              <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-soft)]">{p.description}</p>
+            </div>
+          )}
         </div>
       </main>
 

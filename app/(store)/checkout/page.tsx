@@ -9,7 +9,7 @@ import StateSelect from "@/components/StateSelect";
 import { api } from "@/lib/fetcher";
 import { inr } from "@/lib/format";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
 
 declare global { interface Window { Razorpay: any } }
 
@@ -24,7 +24,7 @@ export default function Checkout() {
   const { values: v, setValues, field } = useForm({
     guestEmail: "", shippingName: "", shippingPhone: "", shippingPincode: "", shippingState: "", shippingAddress: "",
   });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status: actionStatus } = useAction();
 
   const [saved, setSaved] = useState<Saved[]>([]);
   const [saveAddress, setSaveAddress] = useState(true);
@@ -141,24 +141,24 @@ export default function Checkout() {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <h1 className="font-serif text-3xl font-semibold tracking-tight">Checkout</h1>
 
-      <div className="border rounded p-3 text-sm space-y-1">
+      <div className="surface p-4 text-sm space-y-1">
         {items.map((i) => (
           <p key={i.variantId} className={row}>
-            <span>{i.name} ({i.color}, {i.size}) × {i.qty}</span>
+            <span className="text-[var(--ink-soft)]">{i.name} ({i.color}, {i.size}) × {i.qty}</span>
             <span>{inr(i.price * i.qty)}</span>
           </p>
         ))}
-        <div className="border-t pt-2 mt-2 space-y-1">
-          <p className={row}><span>Subtotal</span><span>{inr(quote?.subtotal ?? total)}</span></p>
+        <div className="border-t border-[var(--line)] pt-2 mt-2 space-y-1">
+          <p className={row}><span className="text-[var(--ink-soft)]">Subtotal</span><span>{inr(quote?.subtotal ?? total)}</span></p>
           {quote?.discount > 0 && (
-            <p className={`${row} text-green-700`}><span>Discount ({quote.couponCode})</span><span>-{inr(quote.discount)}</span></p>
+            <p className={`${row} text-[var(--ok)]`}><span>Discount ({quote.couponCode})</span><span>-{inr(quote.discount)}</span></p>
           )}
-          {quote && <p className={row}><span>Shipping</span><span>{quote.shipping ? inr(quote.shipping) : "Free"}</span></p>}
-          {quote?.codFee > 0 && <p className={row}><span>Cash on Delivery fee</span><span>{inr(quote.codFee)}</span></p>}
+          {quote && <p className={row}><span className="text-[var(--ink-soft)]">Shipping</span><span>{quote.shipping ? inr(quote.shipping) : "Free"}</span></p>}
+          {quote?.codFee > 0 && <p className={row}><span className="text-[var(--ink-soft)]">Cash on Delivery fee</span><span>{inr(quote.codFee)}</span></p>}
           {quote && quote.shipping > 0 && quote.freeShippingAbove > 0 && (
-            <p className="text-xs">Add {inr(Math.max(quote.freeShippingAbove - quote.subtotal, 0))} more for free shipping</p>
+            <p className="text-xs text-[var(--accent)]">Add {inr(Math.max(quote.freeShippingAbove - quote.subtotal, 0))} more for free shipping</p>
           )}
-          <p className={`${row} font-semibold text-base`}><span>Total</span><span>{inr(grand)}</span></p>
+          <p className={`${row} mt-1 border-t border-[var(--line)] pt-2 font-semibold text-base`}><span>Total</span><span>{inr(grand)}</span></p>
         </div>
       </div>
 
@@ -173,16 +173,16 @@ export default function Checkout() {
               onClick={() => { setCoupon(""); setCodeInput(""); setCouponMsg(""); }}>Remove</button>
           )}
         </div>
-        {couponMsg && <p className="text-xs">{couponMsg}</p>}
+        {couponMsg && <p className="text-xs text-[var(--ink-soft)]">{couponMsg}</p>}
       </div>
 
       <form onSubmit={pay} className="space-y-4">
         {!loggedIn && (
           <Section title="Your email">
             <TextField label="Email (we send your order updates here)" type="email" required {...field("guestEmail")} />
-            <p className="text-xs">
+            <p className="text-xs text-[var(--ink-soft)]">
               Checking out as a guest. Have an account?{" "}
-              <Link href="/login?next=/checkout" className="underline">Log in</Link> to use your saved addresses.
+              <Link href="/login?next=/checkout" className="link-underline">Log in</Link> to use your saved addresses.
             </p>
           </Section>
         )}
@@ -202,8 +202,8 @@ export default function Checkout() {
           <TextField label="Pincode (6 digits)" type="tel" required {...field("shippingPincode")} />
           {pin && quote && (
             quote.deliverable
-              ? <p className="text-xs text-green-700">Delivery available to {pin}</p>
-              : <p className="text-xs text-red-600">Sorry, we do not deliver to {pin} yet</p>
+              ? <p className="text-xs font-medium text-[var(--ok)]">Delivery available to {pin}</p>
+              : <p className="text-xs font-medium text-[var(--danger)]">Sorry, we do not deliver to {pin} yet</p>
           )}
           <StateSelect value={v.shippingState} onChange={(s) => setValues((p) => ({ ...p, shippingState: s }))} />
           <TextField label="Full address" rows={3} required {...field("shippingAddress")} />
@@ -212,16 +212,16 @@ export default function Checkout() {
 
         {quote?.codEnabled && (
           <Section title="Payment method">
-            <label className="flex items-center gap-2 text-sm">
+            <label className={`flex items-center gap-2.5 rounded-[var(--radius-sm)] border p-3 text-sm cursor-pointer transition ${method === "online" ? "border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_8%,transparent)]" : "border-[var(--line-strong)] hover:border-[var(--muted)]"}`}>
               <input type="radio" checked={method === "online"} onChange={() => setChoice("online")} />
               Pay online (UPI, cards, netbanking)
             </label>
-            <label className={`flex items-center gap-2 text-sm ${quote.codAvailable ? "" : "opacity-50"}`}>
+            <label className={`flex items-center gap-2.5 rounded-[var(--radius-sm)] border p-3 text-sm transition ${!quote.codAvailable ? "opacity-50 cursor-not-allowed border-[var(--line-strong)]" : method === "cod" ? "border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_8%,transparent)] cursor-pointer" : "border-[var(--line-strong)] hover:border-[var(--muted)] cursor-pointer"}`}>
               <input type="radio" disabled={!quote.codAvailable} checked={method === "cod"} onChange={() => setChoice("cod")} />
               Cash on Delivery{quote.codCharge > 0 && ` (+${inr(quote.codCharge)} fee)`}
             </label>
             {!quote.codAvailable && (
-              <p className="text-xs">
+              <p className="text-xs text-[var(--ink-soft)]">
                 {quote.codBlocked?.length
                   ? `Cash on Delivery is not available for: ${quote.codBlocked.join(", ")}`
                   : pin
@@ -232,7 +232,7 @@ export default function Checkout() {
           </Section>
         )}
 
-        {msg && <p className="text-sm text-red-600">{msg}</p>}
+        <FormMessage msg={msg} status={actionStatus} />
         <SubmitButton loading={loading || !quote || blocked}>
           {method === "cod" ? `Place order (pay ${inr(grand)} on delivery)` : `Pay ${inr(grand)}`}
         </SubmitButton>

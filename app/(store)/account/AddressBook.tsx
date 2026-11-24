@@ -4,7 +4,7 @@ import { api } from "@/lib/fetcher";
 import { stateName } from "@/lib/gst";
 import { useForm, useAction } from "@/lib/hooks";
 import StateSelect from "@/components/StateSelect";
-import { Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
 
 type Addr = { id: string; label: string; name: string; phone: string; pincode: string; state: string; address: string; isDefault: boolean };
 const empty = { label: "", name: "", phone: "", pincode: "", state: "", address: "", isDefault: false };
@@ -14,7 +14,7 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
   const [editId, setEditId] = useState<string | null>(null);
   const [open, setOpen] = useState(initial.length === 0);
   const { values: v, setValues, field } = useForm(empty);
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   const reload = () => api("/api/account/addresses").then(setRows);
 
   const close = () => { setOpen(false); setEditId(null); setValues(empty); };
@@ -23,12 +23,12 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
     <Section title="Saved addresses">
       {rows.map((a) => (
         <div key={a.id} className="surface p-3 text-sm space-y-1">
-          <p className="font-medium">
+          <p className="font-medium text-[var(--ink)]">
             {a.label || a.name}{a.isDefault && <span className="badge badge-muted ml-2">Default</span>}
           </p>
-          <p>{a.name} · {a.phone}</p>
-          <p className="whitespace-pre-line">{a.address}</p>
-          <p>{stateName(a.state)} · PIN {a.pincode}</p>
+          <p className="text-[var(--ink-soft)]">{a.name} · {a.phone}</p>
+          <p className="whitespace-pre-line text-[var(--ink-soft)]">{a.address}</p>
+          <p className="text-[var(--ink-soft)]">{stateName(a.state)} · PIN {a.pincode}</p>
           <div className="flex gap-3 pt-1">
             <button className="btn btn-link btn-sm" onClick={() => {
               setEditId(a.id); setOpen(true);
@@ -75,7 +75,7 @@ export default function AddressBook({ initial }: { initial: Addr[] }) {
       ) : (
         <button className="btn btn-outline btn-sm" onClick={() => setOpen(true)}>+ Add an address</button>
       )}
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
     </Section>
   );
 }

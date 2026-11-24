@@ -23,7 +23,7 @@ export default async function Account() {
     <main className="max-w-xl mx-auto p-4 space-y-6">
       <div>
         <h1 className="font-serif text-3xl font-semibold tracking-tight">My account</h1>
-        <p className="text-sm">{row.email} · <Link href="/orders" className="underline">My orders</Link></p>
+        <p className="mt-1 text-sm text-[var(--ink-soft)]">{row.email} · <Link href="/orders" className="link-underline">My orders</Link></p>
       </div>
       <ProfileForm name={row.name ?? ""} />
       <PasswordForm />
