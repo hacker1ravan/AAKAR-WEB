@@ -14,7 +14,7 @@
   /* neutral ink & surfaces (warm, boutique) */
   --ink: #1c1917;
   --ink-soft: #57534e;
-  --muted: #8b857e;
+  --muted: #72706e;
   --line: #ebe7e1;
   --line-strong: #ddd8d0;
   --surface: #ffffff;
@@ -100,6 +100,18 @@
 @layer components {
   .container-x { max-width: 72rem; margin-inline: auto; padding-inline: 1rem; }
 
+  /* Skip-to-content link: kept in the tab order but off-screen until focused,
+     so keyboard users can jump past the header + category nav. */
+  .skip-link {
+    position: fixed; top: .5rem; left: .5rem; z-index: 100;
+    transform: translateY(-150%);
+    background: var(--ink); color: #fff;
+    padding: .6rem 1rem; border-radius: var(--radius-sm);
+    font-size: .875rem; font-weight: 500; box-shadow: var(--shadow-md);
+    transition: transform .18s ease;
+  }
+  .skip-link:focus { transform: translateY(0); }
+
   /* Buttons -------------------------------------------------------- */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
@@ -168,6 +180,7 @@
   /* Category / filter chip ---------------------------------------- */
   .chip {
     display: inline-flex; align-items: center; white-space: nowrap;
+    min-height: 2.5rem; /* 40px tap target for the mobile category bar */
     font-size: .8125rem; font-weight: 500; color: var(--ink-soft);
     padding: .4rem .85rem; border-radius: 999px; border: 1px solid var(--line);
     background: var(--surface); transition: all .18s ease;

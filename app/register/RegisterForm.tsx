@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/fetcher";
+import { FormMessage } from "@/components/ui/fields";
 
 export default function RegisterForm({ initialEmail }: { initialEmail: string }) {
   const [form, setForm] = useState({ name: "", email: initialEmail, password: "" });
@@ -35,13 +36,13 @@ export default function RegisterForm({ initialEmail }: { initialEmail: string })
   if (sent)
     return (
       <main className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-sm space-y-4 border p-6 rounded-lg">
+        <div className="w-full max-w-sm space-y-4 surface p-6">
           <h1 className="font-serif text-3xl font-semibold tracking-tight">Check your email</h1>
           <p className="text-sm">
             We sent a confirmation link to <b>{form.email}</b>. Open it to finish creating your account, then log in.
             Look in your spam folder if you do not see it.
           </p>
-          {note && <p className="text-sm">{note}</p>}
+          <FormMessage msg={note} />
           <button type="button" className="btn btn-link btn-sm" onClick={resend}>Send the email again</button>
           <p className="text-sm"><Link href="/login" className="underline">Go to login</Link></p>
         </div>
@@ -50,16 +51,25 @@ export default function RegisterForm({ initialEmail }: { initialEmail: string })
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 border p-6 rounded-lg">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 surface p-6">
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Create account</h1>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <input className="input" placeholder="Name" aria-label="Name"
-          value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-        <input className="input" type="email" placeholder="Email" aria-label="Email"
-          value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-        <input className="input" type="password" placeholder="Password (min 8 chars)" aria-label="Password"
-          value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-          minLength={8} required />
+        <FormMessage msg={error} status="error" />
+        <label className="block text-sm font-medium text-[var(--ink)]">
+          Name
+          <input className="input mt-1" autoComplete="name"
+            value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+        </label>
+        <label className="block text-sm font-medium text-[var(--ink)]">
+          Email
+          <input className="input mt-1" type="email" autoComplete="email"
+            value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+        </label>
+        <label className="block text-sm font-medium text-[var(--ink)]">
+          Password <span className="font-normal text-[var(--muted)]">(min 8 characters)</span>
+          <input className="input mt-1" type="password" autoComplete="new-password"
+            value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
+            minLength={8} required />
+        </label>
         <button disabled={loading} className="btn btn-dark btn-block">
           {loading ? "Creating..." : "Register"}
         </button>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, SubmitButton } from "@/components/ui/fields";
 
 type Status = { enabled: boolean; recoveryLeft: number; required: boolean };
 
@@ -24,7 +24,7 @@ export default function Security() {
   const [setup, setSetup] = useState<{ secret: string; qr: string } | null>(null);
   const [codes, setCodes] = useState<string[] | null>(null);
   const { values: v, setValues, field } = useForm({ code: "", password: "", disableCode: "", renewCode: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   const load = () => api("/api/admin/security").then(setSt);
   useEffect(() => { load(); }, []);
   // lets the sign-in cookie pick up the new two-factor state
@@ -96,7 +96,7 @@ export default function Security() {
           </form>
         </>
       )}
-      {msg && <p className="text-sm text-red-600">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
     </div>
   );
 }

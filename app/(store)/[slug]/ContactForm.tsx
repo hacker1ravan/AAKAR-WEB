@@ -1,11 +1,11 @@
 "use client";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function ContactForm() {
   const { values: v, setValues, field } = useForm({ name: "", email: "", message: "", website: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   return (
     <form
@@ -25,7 +25,7 @@ export default function ContactForm() {
       {/* hidden spam trap: real users never fill this */}
       <input className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" value={v.website}
         onChange={(e) => setValues((p) => ({ ...p, website: e.target.value }))} />
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Send</SubmitButton>
     </form>
   );

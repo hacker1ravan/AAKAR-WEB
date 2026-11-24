@@ -1,4 +1,5 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -51,7 +52,7 @@ export default function AdminProducts() {
   const [hiddenOnly, setHiddenOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [err, setErr] = useState("");
-  const { run, msg } = useAction();
+  const { run, msg, status } = useAction();
 
   const load = (p = page, f = { q, cat, hiddenOnly }) => {
     const params = new URLSearchParams({ page: String(p) });
@@ -90,7 +91,7 @@ export default function AdminProducts() {
         </label>
         <button className="btn btn-dark btn-sm">Search</button>
       </form>
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       {err && <p className="text-sm text-red-600">{err}</p>}
 
       <DataTable

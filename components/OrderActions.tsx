@@ -1,4 +1,5 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
@@ -11,7 +12,7 @@ export default function OrderActions({
   orderId, accessToken, canPay, amountLabel,
 }: { orderId: string; accessToken?: string; canPay: boolean; amountLabel: string }) {
   const router = useRouter();
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   const pay = () =>
     run(async () => {
@@ -61,7 +62,7 @@ export default function OrderActions({
         )}
         <button disabled={loading} onClick={cancel} className="btn btn-outline">Cancel order</button>
       </div>
-      {msg && <p className="text-red-600">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/fetcher";
@@ -28,7 +29,7 @@ export default function VerifyClient({ token }: { token: string }) {
         {state === "error" && (
           <>
             <h1 className="font-serif text-3xl font-semibold tracking-tight">Could not confirm</h1>
-            <p className="text-sm">{msg}</p>
+            <FormMessage msg={msg} />
             <Link href="/login" className="underline text-sm">Go to login</Link>
           </>
         )}

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function EditPage() {
   const { slug } = useParams<{ slug: string }>();
   const { values: v, setValues, field } = useForm({ title: "", content: "" });
   const [loaded, setLoaded] = useState(false);
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   useEffect(() => {
     api(`/api/admin/pages/${slug}`).then((d) => {
@@ -28,7 +28,7 @@ export default function EditPage() {
       <h1 className="font-serif text-3xl font-semibold tracking-tight">Edit page</h1>
       <TextField label="Title" required {...field("title")} />
       <TextField label="Content" rows={20} {...field("content")} />
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Save page</SubmitButton>
       <Link href={`/${slug}`} className="btn btn-link btn-sm" target="_blank">View page</Link>
     </form>

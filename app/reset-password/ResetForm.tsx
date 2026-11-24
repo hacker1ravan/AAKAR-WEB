@@ -3,12 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function ResetForm({ token }: { token: string }) {
   const router = useRouter();
   const { values, field } = useForm({ password: "", confirm: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   if (!token)
     return (
@@ -34,7 +34,7 @@ export default function ResetForm({ token }: { token: string }) {
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Set new password</h1>
         <TextField label="New password (min 8 characters)" type="password" required {...field("password")} />
         <TextField label="Confirm password" type="password" required {...field("confirm")} />
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={status} />
         <SubmitButton loading={loading}>Change password</SubmitButton>
       </form>
     </main>

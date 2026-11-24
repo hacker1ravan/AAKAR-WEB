@@ -2,11 +2,11 @@
 import { useEffect } from "react";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField, CheckField, ColorField, ImageField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, ColorField, ImageField, SubmitButton } from "@/components/ui/fields";
 
 export default function SettingsPage() {
   const { values: s, setValues, field } = useForm<Record<string, any>>({});
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   // Money is stored in paise but edited in rupees
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function SettingsPage() {
         <TextField label="WhatsApp number with country code, digits only (e.g. 919876543210)" {...field("whatsappNumber")} />
       </Section>
 
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Save settings</SubmitButton>
     </form>
   );

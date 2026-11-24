@@ -4,7 +4,7 @@ import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
 import { inr } from "@/lib/format";
 import { DataTable } from "@/components/admin/DataTable";
-import { Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, SubmitButton } from "@/components/ui/fields";
 import { fmtDate } from "@/lib/format";
 
 const empty = {
@@ -17,7 +17,7 @@ export default function AdminCoupons() {
   const [rows, setRows] = useState<any[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
   const { values: v, setValues, field } = useForm(empty);
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status: formStatus } = useAction();
   const load = () => api("/api/admin/coupons").then(setRows);
   useEffect(() => { load(); }, []);
   const reset = () => { setEditId(null); setValues(empty); };
@@ -68,7 +68,7 @@ export default function AdminCoupons() {
           <TextField label="Expiry date (leave empty = never)" type="date" {...field("expiresAt")} />
           <CheckField label="Active" {...field("active")} />
         </Section>
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={formStatus} />
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Create coupon"}</SubmitButton>
         {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>

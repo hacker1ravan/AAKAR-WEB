@@ -25,6 +25,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
 
   return (
     <>
+      <a href="#main" className="skip-link">Skip to content</a>
       {s.maintenanceMode && (
         <div className="border-b border-[color-mix(in_oklab,#f59e0b_40%,var(--line))] bg-[color-mix(in_oklab,#f59e0b_16%,var(--surface))] p-2 text-center text-sm font-medium text-[var(--ink)]">
           Maintenance mode is ON. Only admins can see the store.
@@ -34,7 +35,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
         <div className="text-center text-sm p-2 bg-[var(--primary)] text-[var(--secondary)]">{s.announcement}</div>
       )}
       <Header />
-      {children}
+      <div id="main" tabIndex={-1}>{children}</div>
       <Footer />
       <WhatsAppButton />
       {s.googleAnalyticsId.trim() && <ConsentAnalytics gaId={s.googleAnalyticsId.trim()} />}

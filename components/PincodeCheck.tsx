@@ -1,4 +1,5 @@
 "use client";
+import { FormMessage } from "@/components/ui/fields";
 import { useState } from "react";
 import { api } from "@/lib/fetcher";
 
@@ -27,7 +28,7 @@ export default function PincodeCheck() {
           Check delivery
         </button>
       </div>
-      {msg && <p>{msg}</p>}
+      <FormMessage msg={msg} />
     </div>
   );
 }

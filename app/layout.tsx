@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             // Softer text + stronger border shades derived from the chosen
             // text/border colours (resolved on <body> so they track overrides).
             "--ink-soft": "color-mix(in oklab, var(--ink) 71%, var(--surface))",
-            "--muted": "color-mix(in oklab, var(--ink) 49%, var(--surface))",
+            "--muted": "color-mix(in oklab, var(--ink) 58%, var(--surface))",
             "--line-strong": "color-mix(in oklab, var(--line) 93%, var(--ink))",
           } as CSSProperties
         }

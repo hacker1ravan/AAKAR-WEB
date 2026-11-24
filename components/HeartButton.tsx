@@ -10,7 +10,7 @@ export default function HeartButton({ id }: { id: string }) {
       aria-label={on ? "Remove from wishlist" : "Add to wishlist"}
       aria-pressed={on}
       onClick={() => toggle(id)}
-      className={`grid place-items-center w-9 h-9 rounded-full bg-white/90 backdrop-blur border border-black/5
+      className={`grid place-items-center w-11 h-11 rounded-full bg-white/90 backdrop-blur border border-black/5
         shadow-sm transition hover:scale-110 active:scale-95
         ${on ? "text-[var(--accent)]" : "text-stone-700 hover:text-[var(--accent)]"}`}
     >
