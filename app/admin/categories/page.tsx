@@ -4,7 +4,7 @@ import Link from "next/link";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
 import { DataTable } from "@/components/admin/DataTable";
-import { Section, TextField, CheckField, ImageField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, ImageField, SubmitButton } from "@/components/ui/fields";
 import { cld } from "@/lib/img";
 
 const empty = { name: "", imageUrl: "", position: "0", active: true, codAvailable: true, sizeChart: "" };
@@ -13,7 +13,7 @@ export default function AdminCategories() {
   const [rows, setRows] = useState<any[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
   const { values: v, setValues, field } = useForm(empty);
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   const load = () => api("/api/admin/categories").then(setRows);
   useEffect(() => { load(); }, []);
 
@@ -51,7 +51,7 @@ export default function AdminCategories() {
           <TextField label="Size chart (one row per line, columns separated by |)" rows={6} {...field("sizeChart")} />
           <p className="text-xs">Example: first line "Size | Chest (in) | Waist (in)", next line "M | 38 | 32"</p>
         </Section>
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={status} />
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Add category"}</SubmitButton>
         {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>

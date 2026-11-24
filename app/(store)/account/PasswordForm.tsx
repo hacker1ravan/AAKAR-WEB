@@ -2,11 +2,11 @@
 import { signOut } from "next-auth/react";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function PasswordForm() {
   const { values, setValues, field } = useForm({ currentPassword: "", newPassword: "", confirm: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   return (
     <form
       onSubmit={(e) => {
@@ -24,7 +24,7 @@ export default function PasswordForm() {
         <TextField label="Current password" type="password" required {...field("currentPassword")} />
         <TextField label="New password (min 8 characters)" type="password" required {...field("newPassword")} />
         <TextField label="Confirm new password" type="password" required {...field("confirm")} />
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={status} />
         <SubmitButton loading={loading}>Change password</SubmitButton>
       </Section>
     </form>

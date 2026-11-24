@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { Section, TextField, CheckField, ImagesField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, ImagesField, SubmitButton } from "@/components/ui/fields";
 
 type Variant = { id?: string; size: string; color: string; stock: number | string };
 const cell = "input";
@@ -24,7 +24,7 @@ export default function ProductForm({ product }: { product?: any }) {
     variants: (product?.variants?.map(({ id, size, color, stock }: Variant) => ({ id, size, color, stock })) ??
       [{ size: "M", color: "", stock: 0 }]) as Variant[],
   });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
   const [cats, setCats] = useState<any[]>([]);
   useEffect(() => { api("/api/admin/categories").then(setCats).catch(() => {}); }, []);
 
@@ -102,7 +102,7 @@ export default function ProductForm({ product }: { product?: any }) {
           + Add variant
         </button>
       </Section>
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Save product</SubmitButton>
     </form>
   );

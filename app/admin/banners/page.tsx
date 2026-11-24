@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
 import { DataTable } from "@/components/admin/DataTable";
-import { Section, TextField, CheckField, ImageField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, Section, TextField, CheckField, ImageField, SubmitButton } from "@/components/ui/fields";
 import { cld } from "@/lib/img";
 
 const empty = {
@@ -16,7 +16,7 @@ export default function AdminBanners() {
   const [rows, setRows] = useState<any[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
   const { values: v, setValues, field } = useForm(empty);
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status: formStatus } = useAction();
   const load = () => api("/api/admin/banners").then(setRows);
   useEffect(() => { load(); }, []);
   const reset = () => { setEditId(null); setValues(empty); };
@@ -66,7 +66,7 @@ export default function AdminBanners() {
           <TextField label="Show until date (optional)" type="date" {...field("endsAt")} />
           <CheckField label="Active" {...field("active")} />
         </Section>
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={formStatus} />
         <SubmitButton loading={loading}>{editId ? "Save changes" : "Add banner"}</SubmitButton>
         {editId && <button type="button" className="btn btn-link btn-sm" onClick={reset}>Cancel edit</button>}
       </form>

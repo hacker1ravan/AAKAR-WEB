@@ -2,11 +2,11 @@
 import Link from "next/link";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function ForgotPassword() {
   const { values, field } = useForm({ email: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Forgot password</h1>
         <p className="text-sm">Enter your email and we will send you a link to reset your password.</p>
         <TextField label="Email" type="email" required {...field("email")} />
-        {msg && <p className="text-sm">{msg}</p>}
+        <FormMessage msg={msg} status={status} />
         <SubmitButton loading={loading}>Send reset link</SubmitButton>
         <p className="text-sm"><Link href="/login" className="underline">Back to login</Link></p>
       </form>

@@ -2,12 +2,12 @@
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function ReturnForm({ orderId }: { orderId: string }) {
   const router = useRouter();
   const { values, field } = useForm({ orderId, reason: "", details: "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   return (
     <form
@@ -23,7 +23,7 @@ export default function ReturnForm({ orderId }: { orderId: string }) {
       <h2 className="font-semibold">Request a return</h2>
       <TextField label="Reason (size, damaged, wrong item...)" required {...field("reason")} />
       <TextField label="Details" rows={3} {...field("details")} />
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Submit request</SubmitButton>
     </form>
   );

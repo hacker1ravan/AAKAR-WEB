@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/fetcher";
 import { useForm, useAction } from "@/lib/hooks";
-import { TextField, SubmitButton } from "@/components/ui/fields";
+import { FormMessage, TextField, SubmitButton } from "@/components/ui/fields";
 
 export default function ReviewForm({
   productId, mine,
@@ -11,7 +11,7 @@ export default function ReviewForm({
   const router = useRouter();
   const [rating, setRating] = useState(mine?.rating ?? 5);
   const { values, field } = useForm({ comment: mine?.comment ?? "" });
-  const { run, loading, msg } = useAction();
+  const { run, loading, msg, status } = useAction();
 
   return (
     <form
@@ -32,7 +32,7 @@ export default function ReviewForm({
         </select>
       </label>
       <TextField label="Your review" rows={3} required {...field("comment")} />
-      {msg && <p className="text-sm">{msg}</p>}
+      <FormMessage msg={msg} status={status} />
       <SubmitButton loading={loading}>Submit review</SubmitButton>
     </form>
   );
