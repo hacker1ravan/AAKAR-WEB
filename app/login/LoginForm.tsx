@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/fetcher";
+import { FormMessage } from "@/components/ui/fields";
 
 export default function LoginForm({ next, verified }: { next: string; verified: boolean }) {
   const router = useRouter();
@@ -52,21 +53,30 @@ export default function LoginForm({ next, verified }: { next: string; verified: 
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 border p-6 rounded-lg">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 surface p-6">
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Login</h1>
-        {info && <p className="text-green-700 text-sm">{info}</p>}
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        <FormMessage msg={info} status="ok" />
+        <FormMessage msg={error} status="error" />
         {notVerified && (
           <button type="button" className="btn btn-link btn-sm" onClick={resend}>Send the confirmation email again</button>
         )}
-        <input className="input" type="email" placeholder="Email" aria-label="Email"
-          value={email} onChange={(e) => setEmail(e.target.value)} readOnly={needCode} required />
-        <input className="input" type="password" placeholder="Password" aria-label="Password"
-          value={password} onChange={(e) => setPassword(e.target.value)} readOnly={needCode} required />
+        <label className="block text-sm font-medium text-[var(--ink)]">
+          Email
+          <input className="input mt-1" type="email" autoComplete="email"
+            value={email} onChange={(e) => setEmail(e.target.value)} readOnly={needCode} required />
+        </label>
+        <label className="block text-sm font-medium text-[var(--ink)]">
+          Password
+          <input className="input mt-1" type="password" autoComplete="current-password"
+            value={password} onChange={(e) => setPassword(e.target.value)} readOnly={needCode} required />
+        </label>
         {needCode && (
-          <input className="input tracking-widest" inputMode="text" autoComplete="one-time-code" autoFocus
-            placeholder="123456 or backup code" aria-label="Two-factor code"
-            value={code} onChange={(e) => setCode(e.target.value)} required />
+          <label className="block text-sm font-medium text-[var(--ink)]">
+            Two-factor code
+            <input className="input mt-1 tracking-widest" inputMode="text" autoComplete="one-time-code" autoFocus
+              placeholder="123456 or backup code"
+              value={code} onChange={(e) => setCode(e.target.value)} required />
+          </label>
         )}
         <p className="text-sm"><Link href="/forgot-password" className="underline">Forgot password?</Link></p>
         <button disabled={loading} className="btn btn-dark btn-block">
