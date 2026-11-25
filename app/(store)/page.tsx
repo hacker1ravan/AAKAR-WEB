@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import ProductCard from "@/components/ProductCard";
 import BannerSlider from "@/components/BannerSlider";
+import HeroEditorial from "@/components/HeroEditorial";
 import Photo from "@/components/Photo";
-import { ButtonLink } from "@/components/ui/Button";
 
 export default async function Home() {
   const now = new Date();
@@ -33,17 +33,29 @@ export default async function Home() {
     }),
   ]);
 
+  // Editorial hero image for the no-banner fallback: feature the newest product,
+  // or a category image, so the landing page looks finished out of the box.
+  const heroImage =
+    products.find((p) => p.images?.length)?.images[0] ||
+    cats.find((c) => c.imageUrl)?.imageUrl ||
+    null;
+
   return (
     <main>
       {banners.length > 0 ? (
         <BannerSlider banners={banners} />
       ) : (
-        <section className="bg-[var(--primary)] px-4 py-24 text-center text-[var(--secondary)]">
-          <p className="eyebrow text-current opacity-70">Welcome to</p>
-          <h1 className="mt-3 font-serif text-4xl font-semibold tracking-tight md:text-6xl">{s.siteName}</h1>
-          {s.tagline && <p className="mx-auto mt-4 max-w-md text-base opacity-90">{s.tagline}</p>}
-          <ButtonLink href="/products" size="lg" className="mt-8">Shop now</ButtonLink>
-        </section>
+        <HeroEditorial
+          eyebrow={`Welcome to ${s.siteName}`}
+          title={s.siteName}
+          description={s.tagline || undefined}
+          image={heroImage}
+          imageAlt={s.siteName}
+          primaryHref="/products"
+          primaryLabel="Shop now"
+          secondaryHref="/products"
+          secondaryLabel="Browse the collection"
+        />
       )}
 
       <section className="container-x py-12 md:py-16">
