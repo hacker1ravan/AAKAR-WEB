@@ -309,3 +309,14 @@
   .admin-nav-mobile > div:first-child .admin-group-label { margin-top: .15rem; }
   .admin-nav-mobile .admin-nav-link { padding: .4rem .85rem; }
 }
+
+/* Banner slider polish: active-dot autoplay progress fill + slow Ken Burns zoom.
+   Both are disabled automatically by the global prefers-reduced-motion rule. */
+@keyframes bannerDotFill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes bannerKenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
