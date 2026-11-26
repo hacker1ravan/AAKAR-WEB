@@ -15,11 +15,17 @@ export default function Reviews({
   return (
     <section className="max-w-5xl mx-auto p-4 space-y-3">
       <h2 className="text-xl font-semibold">
-        Reviews {reviews.length > 0 && <span className="text-base font-normal">· ★ {avg.toFixed(1)} ({reviews.length})</span>}
+        Reviews {reviews.length > 0 && (
+          <span className="text-base font-normal">
+            · <span aria-hidden="true">★</span> {avg.toFixed(1)} ({reviews.length})
+          </span>
+        )}
       </h2>
       {reviews.map((r) => (
         <div key={r.id} className="border rounded p-3 text-sm">
-          <p className="text-amber-500">{stars(r.rating)}</p>
+          <p className="text-[var(--star)]" aria-label={`Rated ${r.rating} out of 5`}>
+            <span aria-hidden="true">{stars(r.rating)}</span>
+          </p>
           <p className="whitespace-pre-line">{r.comment}</p>
           <p className="text-xs mt-1">{r.userName} · {fmtDate(r.createdAt)}</p>
         </div>

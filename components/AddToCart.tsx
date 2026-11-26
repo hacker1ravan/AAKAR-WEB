@@ -37,7 +37,9 @@ export default function AddToCart({ product }: Props) {
               onClick={() => { setSize(v.size); setAdded(false); }}>{v.size}</button>
           ))}
         </div>
-        {variant && variant.stock <= 5 && <p className="mt-1.5 text-xs font-medium text-[var(--danger)]">Only {variant.stock} left</p>}
+        <p className="mt-1.5 text-xs font-medium text-[var(--danger)]" role="status" aria-live="polite">
+          {variant && variant.stock <= 5 ? `Only ${variant.stock} left` : ""}
+        </p>
       </div>
       <Button
         variant="dark"

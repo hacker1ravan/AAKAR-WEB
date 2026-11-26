@@ -102,7 +102,7 @@ export default async function ProductPage({ params }: P) {
           </div>
           {reviews.length > 0 && (
             <p className="text-sm text-[var(--ink-soft)]">
-              <span className="text-[var(--accent)]">★</span> {avg.toFixed(1)} ({reviews.length} review{reviews.length > 1 ? "s" : ""})
+              <span className="text-[var(--accent)]" aria-hidden="true">★</span> {avg.toFixed(1)} ({reviews.length} review{reviews.length > 1 ? "s" : ""})
             </p>
           )}
           <Price price={p.price} compare={p.comparePrice} className="text-2xl" />
