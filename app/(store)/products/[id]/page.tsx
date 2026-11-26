@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -78,7 +79,20 @@ export default async function ProductPage({ params }: P) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-      <main className="container-x grid gap-8 py-8 md:grid-cols-2 md:gap-12">
+      <nav aria-label="Breadcrumb" className="container-x pt-6 text-sm text-[var(--muted)]">
+        <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+          <li><Link href="/" className="transition-colors hover:text-[var(--ink)]">Home</Link></li>
+          <li aria-hidden="true" className="text-[var(--line-strong)]">/</li>
+          <li>
+            <Link href={`/products?category=${encodeURIComponent(p.category)}`} className="transition-colors hover:text-[var(--ink)]">
+              {p.category}
+            </Link>
+          </li>
+          <li aria-hidden="true" className="text-[var(--line-strong)]">/</li>
+          <li aria-current="page" className="max-w-[16rem] truncate text-[var(--ink-soft)]">{p.name}</li>
+        </ol>
+      </nav>
+      <main className="container-x grid gap-8 pb-8 pt-6 md:grid-cols-2 md:gap-12">
         <ProductGallery images={p.images} alt={p.name} />
         <div className="space-y-5 md:sticky md:top-24 md:self-start">
           <p className="eyebrow">{p.category}</p>
