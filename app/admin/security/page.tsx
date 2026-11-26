@@ -35,7 +35,7 @@ export default function Security() {
     <div className="p-4 space-y-6 max-w-xl mx-auto">
       <h1 className="font-serif text-3xl font-semibold tracking-tight">Security</h1>
       {st.required && !st.enabled && (
-        <p className="border border-red-600 text-red-700 rounded p-3 text-sm">
+        <p className="border border-[var(--danger)] text-[var(--danger)] rounded p-3 text-sm">
           This store requires two-factor login for admins. Set it up below to use the rest of the admin panel.
         </p>
       )}

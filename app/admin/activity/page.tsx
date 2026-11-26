@@ -22,7 +22,7 @@ export default function Activity() {
           value={q} onChange={(e) => setQ(e.target.value)} />
         <button className="btn btn-dark btn-sm">Search</button>
       </form>
-      {err && <p className="text-sm text-red-600">{err}</p>}
+      {err && <p className="text-sm text-[var(--danger)]">{err}</p>}
       <DataTable
         rows={data?.rows ?? []}
         cols={[

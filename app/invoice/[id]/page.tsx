@@ -64,7 +64,7 @@ export default async function Invoice({
 
       <div className="overflow-x-auto">
         <table className="w-full border">
-          <thead className="bg-gray-100">
+          <thead className="bg-[var(--surface-2)]">
             <tr>
               <th className={th}>Item</th>
               {gst && <th className={th}>HSN</th>}

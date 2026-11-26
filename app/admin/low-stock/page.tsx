@@ -12,14 +12,14 @@ function Restock({ v, t, onSaved }: { v: any; t: number; onSaved: () => void }) 
   const [err, setErr] = useState("");
   const changed = (Math.max(0, Math.floor(Number(val))) || 0) !== v.stock;
   const tone =
-    v.stock === 0 ? "border-red-500 bg-red-50" : v.stock <= t ? "border-amber-500 bg-amber-50" : "";
+    v.stock === 0 ? "border-[var(--danger)] bg-[color-mix(in_oklab,var(--danger)_8%,var(--surface))]" : v.stock <= t ? "border-[var(--warn)] bg-[color-mix(in_oklab,var(--warn)_10%,var(--surface))]" : "";
 
   return (
     <div className={`flex items-center gap-2 border rounded p-1 text-xs ${tone}`}>
       <span className="w-28 truncate">{v.color} · {v.size}</span>
       <input type="number" min={0} className="input w-16 !py-1 text-xs" aria-label="Stock" value={val}
         onChange={(e) => setVal(e.target.value)} />
-      {v.stock === 0 && <b className="text-red-600">Out</b>}
+      {v.stock === 0 && <b className="text-[var(--danger)]">Out</b>}
       {changed && (
         <button className="btn btn-dark btn-sm" disabled={busy}
           onClick={async () => {
@@ -33,7 +33,7 @@ function Restock({ v, t, onSaved }: { v: any; t: number; onSaved: () => void }) 
           {busy ? "..." : "Save"}
         </button>
       )}
-      {err && <span className="text-red-600">{err}</span>}
+      {err && <span className="text-[var(--danger)]">{err}</span>}
     </div>
   );
 }
@@ -71,7 +71,7 @@ export default function LowStock() {
         <button className="chip" data-active={!cat} onClick={() => setCat("")}>All ({products.length})</button>
         {[...byCat].map(([name, c]) => (
           <button key={name} className="chip" data-active={cat === name} onClick={() => setCat(name)}>
-            {name} ({c.products}){c.out > 0 && <span className="text-red-500"> · {c.out} out</span>}
+            {name} ({c.products}){c.out > 0 && <span className="text-[var(--danger)]"> · {c.out} out</span>}
           </button>
         ))}
       </div>
@@ -93,8 +93,8 @@ export default function LowStock() {
                 <p className="text-xs">{p.category} · {inr(p.price)}</p>
                 <p className="text-xs">
                   Total left: <b>{p.totalStock}</b>
-                  {p.outCount > 0 && <span className="text-red-600"> · {p.outCount} out</span>}
-                  {p.lowCount > 0 && <span className="text-amber-600"> · {p.lowCount} low</span>}
+                  {p.outCount > 0 && <span className="text-[var(--danger)]"> · {p.outCount} out</span>}
+                  {p.lowCount > 0 && <span className="text-[var(--warn)]"> · {p.lowCount} low</span>}
                 </p>
               </div>
             ),

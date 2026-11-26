@@ -36,9 +36,11 @@
   --primary: #1c1917;
   --secondary: #ffffff;
 
-  /* semantic feedback (form messages) */
+  /* semantic feedback (form messages, status badges, alerts) */
   --danger: #dc2626;
   --ok: #15803d;
+  --warn: #b45309;   /* warnings / low-stock / in-progress statuses */
+  --star: #f59e0b;   /* rating stars (gold) */
 }
 
 @layer base {

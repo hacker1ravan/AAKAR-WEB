@@ -129,7 +129,7 @@ function OrderPanel({ order, couriers, onDone }: { order: any; couriers: string[
         </select>
       </label>
       {v.status === "cancelled" && order.status !== "cancelled" && order.paymentMethod !== "cod" && order.razorpayPaymentId && (
-        <p role="alert" className="rounded-md border border-amber-500 bg-amber-50 text-amber-800 text-sm p-3">
+        <p role="alert" className="rounded-md border border-[var(--warn)] bg-[color-mix(in_oklab,var(--warn)_10%,var(--surface))] text-[var(--warn)] text-sm p-3">
           This order was paid online. Cancelling restores stock but does <strong>not</strong> refund the customer automatically — issue the {inr(order.total)} refund yourself in the Razorpay dashboard.
         </p>
       )}

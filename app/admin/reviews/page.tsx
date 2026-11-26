@@ -35,7 +35,7 @@ export default function AdminReviews() {
         </select>
       </div>
       <FormMessage msg={msg} status={actionStatus} />
-      {err && <p className="text-sm text-red-600">{err}</p>}
+      {err && <p className="text-sm text-[var(--danger)]">{err}</p>}
       <DataTable
         rows={data?.reviews ?? []}
         cols={[

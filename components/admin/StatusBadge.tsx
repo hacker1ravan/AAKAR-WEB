@@ -6,7 +6,7 @@ type Tone = "ok" | "warn" | "danger" | "neutral";
 
 const toneClass: Record<Tone, string> = {
   ok: "text-[var(--ok)] bg-[color-mix(in_oklab,var(--ok)_12%,transparent)]",
-  warn: "text-amber-700 bg-amber-100/70",
+  warn: "text-[var(--warn)] bg-[color-mix(in_oklab,var(--warn)_14%,transparent)]",
   danger: "text-[var(--danger)] bg-[color-mix(in_oklab,var(--danger)_11%,transparent)]",
   neutral: "text-[var(--ink-soft)] bg-[var(--surface-2)] ring-1 ring-[var(--line)]",
 };

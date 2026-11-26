@@ -12,7 +12,7 @@ export default function HeartButton({ id }: { id: string }) {
       onClick={() => toggle(id)}
       className={`grid place-items-center w-11 h-11 rounded-full bg-white/90 backdrop-blur border border-black/5
         shadow-sm transition hover:scale-110 active:scale-95
-        ${on ? "text-[var(--accent)]" : "text-stone-700 hover:text-[var(--accent)]"}`}
+        ${on ? "text-[var(--accent)]" : "text-[var(--ink-soft)] hover:text-[var(--accent)]"}`}
     >
       <svg
         viewBox="0 0 24 24"

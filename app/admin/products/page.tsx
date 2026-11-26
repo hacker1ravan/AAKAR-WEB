@@ -38,7 +38,7 @@ function QuickPrice({ p, onSaved }: { p: any; onSaved: () => void }) {
           </button>
         )}
       </div>
-      {err && <p className="text-xs text-red-600">{err}</p>}
+      {err && <p className="text-xs text-[var(--danger)]">{err}</p>}
     </div>
   );
 }
@@ -92,7 +92,7 @@ export default function AdminProducts() {
         <button className="btn btn-dark btn-sm">Search</button>
       </form>
       <FormMessage msg={msg} status={status} />
-      {err && <p className="text-sm text-red-600">{err}</p>}
+      {err && <p className="text-sm text-[var(--danger)]">{err}</p>}
 
       <DataTable
         rows={data?.products ?? []}
