@@ -60,10 +60,12 @@ export function renderEmail(
 
   const body = opts.bodyHtml || "";
 
-  const btn = button
+  // Only link out to real web URLs; ignore anything else (e.g. javascript:/data:) defensively.
+  const btnUrl = button && /^https?:\/\//i.test(button.url) ? button.url : "";
+  const btn = button && btnUrl
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 6px">
          <tr><td style="border-radius:8px;background:${brand}">
-           <a href="${esc(button.url)}" style="display:inline-block;padding:13px 26px;font-size:15px;font-weight:600;color:${onBrand};text-decoration:none;border-radius:8px">${esc(button.text)}</a>
+           <a href="${esc(btnUrl)}" style="display:inline-block;padding:13px 26px;font-size:15px;font-weight:600;color:${onBrand};text-decoration:none;border-radius:8px">${esc(button.text)}</a>
          </td></tr>
        </table>`
     : "";
@@ -136,6 +138,8 @@ export async function sendMail(
 ) {
   try {
     if (!to) return;
+    // Never let a stray CR/LF in the subject (e.g. from an admin-set site name) fold into mail headers.
+    subject = subject.replace(/[\r\n]+/g, " ").trim();
     // Automated tests: write the email to a file instead of sending it
     if (process.env.E2E_MAIL_LOG) {
       const { appendFileSync } = await import("fs");
