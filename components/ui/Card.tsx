@@ -5,7 +5,7 @@ export default function Card({
   hover = false, className = "", children,
 }: { hover?: boolean; className?: string; children: ReactNode }) {
   return (
-    <div className={`card ${hover ? "hover:shadow-md hover:-translate-y-0.5" : ""} ${className}`.trim()}>
+    <div className={`card ${hover ? "hover:shadow-[var(--shadow-md)] hover:border-[var(--line-strong)] hover:-translate-y-0.5" : ""} ${className}`.trim()}>
       {children}
     </div>
   );
