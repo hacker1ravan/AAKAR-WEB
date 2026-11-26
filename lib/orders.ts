@@ -3,6 +3,7 @@ import { sendMail } from "./mailer";
 import { getSettings } from "./settings";
 import { getInvoice } from "./invoice";
 import { invoicePdf } from "./invoicePdf";
+import { orderSummaryHtml, reviewPromptHtml } from "./emailTemplates";
 
 // Errors safe to show to the admin
 export class OrderError extends Error {}
@@ -15,6 +16,24 @@ const TEXT: Record<string, string> = {
   shipped: "Good news, your order has been shipped.",
   delivered: "Your order has been delivered. We hope you love it!",
   cancelled: "Your order has been cancelled.",
+};
+
+// Presentational dressing for each status email (subject line + header title, status
+// pill, accent colour and inbox preview text). Changes only how the email looks/reads.
+const SUBJECTS: Record<string, string> = {
+  paid: "Your order is confirmed",
+  processing: "We're preparing your order",
+  shipped: "Your order has shipped",
+  delivered: "Your order has been delivered",
+  cancelled: "Your order has been cancelled",
+};
+
+const EMAIL_META: Record<string, { heading: string; badge: string; accent: string; preheader: string }> = {
+  paid: { heading: "Order confirmed", badge: "Payment received", accent: "#16a34a", preheader: "Thanks! Your payment was received and your order is confirmed." },
+  processing: { heading: "We're preparing your order", badge: "In progress", accent: "#2563eb", preheader: "Your order is confirmed and we're getting it ready to ship." },
+  shipped: { heading: "Your order is on its way", badge: "Shipped", accent: "#7c3aed", preheader: "Good news — your order has shipped." },
+  delivered: { heading: "Delivered — we hope you love it!", badge: "Delivered", accent: "#16a34a", preheader: "Your order has been delivered." },
+  cancelled: { heading: "Order cancelled", badge: "Cancelled", accent: "#dc2626", preheader: "Your order has been cancelled." },
 };
 
 type Opts = {
@@ -69,12 +88,23 @@ export async function setOrderStatus(orderId: string, status: string, o: Opts = 
 
   if (notify && TEXT[status]) {
     const s = await getSettings();
-    const lines = [
-      `Hi ${order.user.name ?? "there"},`,
-      TEXT[status],
-      `Order: #${order.id.slice(-8).toUpperCase()}`,
-    ];
+
+    // Build the visual order summary for the email (items, totals, address). Read-only
+    // and best-effort — if it fails for any reason the email still goes out as plain text.
+    let bodyHtml: string | undefined;
+    try {
+      const full = await prisma.order.findUnique({ where: { id: order.id }, include: { items: true } });
+      if (full) {
+        bodyHtml = orderSummaryHtml(full);
+        if (status === "delivered") bodyHtml += reviewPromptHtml(full, s.siteUrl);
+      }
+    } catch (e) {
+      console.error("Order email summary failed", e);
+    }
+
+    const lines = [`Hi ${order.user.name ?? "there"},`, TEXT[status]];
     if (note) lines.push(`Note: ${note}`);
+    if (!bodyHtml) lines.push(`Order: #${order.id.slice(-8).toUpperCase()}`);
     if (status === "shipped" && order.trackingNumber)
       lines.push(`Courier: ${order.courier || "-"}`, `Tracking number: ${order.trackingNumber}`);
     if (status === "shipped" && order.trackingUrl && /^https?:\/\//.test(order.trackingUrl))
@@ -96,7 +126,16 @@ export async function setOrderStatus(orderId: string, status: string, o: Opts = 
 
     // Guests have no login, so their email link carries a private token instead.
     const link = order.user.role === "guest" ? `${s.siteUrl}/track/${order.accessToken}` : `${s.siteUrl}/orders/${order.id}`;
-    await sendMail(order.user.email, `${s.siteName}: order ${status}`, lines, { text: "Track your order", url: link }, attachments);
+    const meta = EMAIL_META[status];
+    const subject = `${s.siteName}: ${SUBJECTS[status] ?? `order ${status}`}`;
+    await sendMail(
+      order.user.email,
+      subject,
+      lines,
+      { text: status === "shipped" ? "Track your order" : "View your order", url: link },
+      attachments,
+      meta ? { heading: meta.heading, badge: meta.badge, accent: meta.accent, preheader: meta.preheader, bodyHtml } : { bodyHtml }
+    );
   }
   return order;
 }
