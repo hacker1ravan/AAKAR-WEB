@@ -97,19 +97,25 @@ export default async function Sales({ searchParams }: { searchParams: Promise<{ 
         ))}
       </div>
 
-      <section className="space-y-2">
-        <h2 className="font-semibold">Revenue per day</h2>
+      <section className="surface p-4 md:p-5 space-y-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <h2 className="font-serif text-lg font-semibold">Revenue per day</h2>
+          {best?.value > 0 && (
+            <p className="text-xs text-[var(--ink-soft)]">
+              Best day: <b className="text-[var(--ink)]">{best.label}</b> ({inr(best.value)})
+            </p>
+          )}
+        </div>
         <BarChart data={series} format={inr} />
-        {best?.value > 0 && <p className="text-xs">Best day: {best.label} ({inr(best.value)})</p>}
       </section>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <section className="space-y-2">
-          <h2 className="font-semibold">Top products</h2>
+      <div className="grid md:grid-cols-2 gap-4">
+        <section className="surface p-4 md:p-5 space-y-3">
+          <h2 className="font-serif text-lg font-semibold">Top products</h2>
           <HBars rows={top} format={inr} />
         </section>
-        <section className="space-y-2">
-          <h2 className="font-semibold">Sales by category</h2>
+        <section className="surface p-4 md:p-5 space-y-3">
+          <h2 className="font-serif text-lg font-semibold">Sales by category</h2>
           <HBars rows={cats} format={inr} />
         </section>
       </div>
