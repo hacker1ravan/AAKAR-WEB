@@ -1,9 +1,10 @@
 import { prisma } from "./prisma";
-import { sendMail } from "./mailer";
+import { sendMail, sendRenderedMail } from "./mailer";
 import { getSettings } from "./settings";
 import { getInvoice } from "./invoice";
 import { invoicePdf } from "./invoicePdf";
 import { orderSummaryHtml, reviewPromptHtml } from "./emailTemplates";
+import { renderOrderEmail } from "./orderEmail";
 
 // Errors safe to show to the admin
 export class OrderError extends Error {}
@@ -89,22 +90,18 @@ export async function setOrderStatus(orderId: string, status: string, o: Opts = 
   if (notify && TEXT[status]) {
     const s = await getSettings();
 
-    // Build the visual order summary for the email (items, totals, address). Read-only
-    // and best-effort — if it fails for any reason the email still goes out as plain text.
-    let bodyHtml: string | undefined;
+    // Load the full order (with items) for the summary block. Read-only and best-effort —
+    // if it fails the email still goes out without the summary.
+    let full: Awaited<ReturnType<typeof prisma.order.findUnique>> | null = null;
     try {
-      const full = await prisma.order.findUnique({ where: { id: order.id }, include: { items: true } });
-      if (full) {
-        bodyHtml = orderSummaryHtml(full);
-        if (status === "delivered") bodyHtml += reviewPromptHtml(full, s.siteUrl);
-      }
+      full = await prisma.order.findUnique({ where: { id: order.id }, include: { items: true } });
     } catch (e) {
       console.error("Order email summary failed", e);
     }
 
     const lines = [`Hi ${order.user.name ?? "there"},`, TEXT[status]];
     if (note) lines.push(`Note: ${note}`);
-    if (!bodyHtml) lines.push(`Order: #${order.id.slice(-8).toUpperCase()}`);
+    if (!full) lines.push(`Order: #${order.id.slice(-8).toUpperCase()}`);
     if (status === "shipped" && order.trackingNumber)
       lines.push(`Courier: ${order.courier || "-"}`, `Tracking number: ${order.trackingNumber}`);
     if (status === "shipped" && order.trackingUrl && /^https?:\/\//.test(order.trackingUrl))
@@ -128,14 +125,57 @@ export async function setOrderStatus(orderId: string, status: string, o: Opts = 
     const link = order.user.role === "guest" ? `${s.siteUrl}/track/${order.accessToken}` : `${s.siteUrl}/orders/${order.id}`;
     const meta = EMAIL_META[status];
     const subject = `${s.siteName}: ${SUBJECTS[status] ?? `order ${status}`}`;
-    await sendMail(
-      order.user.email,
-      subject,
-      lines,
-      { text: status === "shipped" ? "Track your order" : "View your order", url: link },
-      attachments,
-      meta ? { heading: meta.heading, badge: meta.badge, accent: meta.accent, preheader: meta.preheader, bodyHtml } : { bodyHtml }
-    );
+    const button = { text: status === "shipped" ? "Track your order" : "View your order", url: link };
+
+    // Preferred path: render the modern react-email template. If rendering fails for any
+    // reason we fall back to the original plain renderer so the customer is always emailed.
+    let html: string | undefined;
+    try {
+      html = await renderOrderEmail({
+        settings: s,
+        subject,
+        orderId: order.id,
+        preheader: meta?.preheader,
+        heading: meta?.heading,
+        badge: meta?.badge,
+        accent: meta?.accent,
+        greeting: `Hi ${order.user.name ?? "there"},`,
+        message: TEXT[status],
+        note: note || undefined,
+        tracking:
+          status === "shipped"
+            ? { courier: order.courier || undefined, number: order.trackingNumber || undefined, url: order.trackingUrl || undefined }
+            : undefined,
+        invoiceAttached: !!attachments?.length,
+        button,
+        order: full,
+        showReview: status === "delivered",
+      });
+    } catch (e) {
+      console.error("react-email render failed, using plain template", e);
+    }
+
+    if (html) {
+      await sendRenderedMail(order.user.email, subject, html, { attachments, textLines: lines });
+    } else {
+      let bodyHtml: string | undefined;
+      try {
+        if (full) {
+          bodyHtml = orderSummaryHtml(full);
+          if (status === "delivered") bodyHtml += reviewPromptHtml(full, s.siteUrl);
+        }
+      } catch (e) {
+        console.error("Order email summary failed", e);
+      }
+      await sendMail(
+        order.user.email,
+        subject,
+        lines,
+        button,
+        attachments,
+        meta ? { heading: meta.heading, badge: meta.badge, accent: meta.accent, preheader: meta.preheader, bodyHtml } : { bodyHtml }
+      );
+    }
   }
   return order;
 }

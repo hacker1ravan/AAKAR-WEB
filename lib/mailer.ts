@@ -161,3 +161,43 @@ export async function sendMail(
     console.error("Mail failed", e); // never break the order flow because of email
   }
 }
+
+// Sends an email whose HTML body is already rendered elsewhere (e.g. a react-email
+// template). Shares the same transport, test-mode/no-SMTP fallbacks and never-throw
+// guarantee as sendMail — `textLines` is only used for the terminal/test previews.
+export async function sendRenderedMail(
+  to: string,
+  subject: string,
+  html: string,
+  opts: {
+    attachments?: { filename: string; content: Buffer; contentType: string }[];
+    textLines?: string[];
+  } = {}
+) {
+  const { attachments, textLines = [] } = opts;
+  try {
+    if (!to) return;
+    subject = subject.replace(/[\r\n]+/g, " ").trim();
+    const preview = () =>
+      `To: ${to}\nSubject: ${subject}\n${textLines.join("\n")}${attachments?.length ? `\n[attachments: ${attachments.map((a) => `${a.filename} (${a.content.length} bytes)`).join(", ")}]` : ""}`;
+    if (process.env.E2E_MAIL_LOG) {
+      const { appendFileSync } = await import("fs");
+      appendFileSync(process.env.E2E_MAIL_LOG, `\n[email not sent: test mode]\n${preview()}\n`);
+      return;
+    }
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+      console.log(`\n[email not sent: SMTP not configured]\n${preview()}\n`);
+      return;
+    }
+    const s = await getSettings();
+    await transporter.sendMail({
+      from: `"${s.siteName.replace(/["\r\n]/g, "")}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to,
+      subject,
+      html,
+      attachments,
+    });
+  } catch (e) {
+    console.error("Mail failed", e); // never break the order flow because of email
+  }
+}
